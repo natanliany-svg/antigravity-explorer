@@ -88,6 +88,7 @@ btnBackToTop.addEventListener('click', ()=>{
 
 // KEYBOARD SHORTCUTS
 window.addEventListener('keydown', (e)=>{
+  const modalActive = document.getElementById('itemModal').classList.contains('active');
   if(e.key === 'Escape'){
     closeItemModal();
     closeCompareModal();
@@ -95,6 +96,9 @@ window.addEventListener('keydown', (e)=>{
       const el = document.getElementById(id);
       if(el) el.classList.remove('active');
     });
+  } else if(modalActive && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
+    e.preventDefault();
+    navModalItem(e.key === 'ArrowLeft' ? 1 : -1);
   } else if(e.key === '/' && document.activeElement !== document.getElementById('searchInput')){
     e.preventDefault();
     const inp = document.getElementById('searchInput');
@@ -126,6 +130,96 @@ function renderStats(){
   `;
 }
 
+// ESCAPE & BIDI SAFE FORMATTING HELPERS
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightMatch(text, query){
+  if(!query || !text) return text || '';
+  try{
+    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+    return String(text).replace(regex, '<mark class="highlight">$1</mark>');
+  }catch(e){
+    return text || '';
+  }
+}
+
+function formatTitleSafe(n, query){
+  if(!n) return '';
+  let left = '', right = '', hasSep = false;
+  if(n.includes(' — ')){
+    const parts = n.split(' — ');
+    left = parts[0].trim();
+    right = parts.slice(1).join(' — ').trim();
+    hasSep = true;
+  } else if(n.includes(' - ')){
+    const parts = n.split(' - ');
+    left = parts[0].trim();
+    right = parts.slice(1).join(' - ').trim();
+    hasSep = true;
+  }
+
+  if(hasSep && /[a-zA-Z/]/.test(left)){
+    const displayLeft = query ? highlightMatch(escapeHtml(left), query) : escapeHtml(left);
+    const displayRight = query ? highlightMatch(escapeHtml(right), query) : escapeHtml(right);
+    return `<span class="badge-title-code" dir="ltr"><bdi>${displayLeft}</bdi></span><span class="title-sep">—</span><span class="title-hebrew">${displayRight}</span>`;
+  }
+
+  const displayN = query ? highlightMatch(escapeHtml(n), query) : escapeHtml(n);
+  return `<span class="title-hebrew">${displayN}</span>`;
+}
+
+function formatTextSafe(text, query){
+  if(!text) return '';
+  let str = escapeHtml(text);
+  if(query){
+    str = highlightMatch(str, query);
+  }
+  // 1. Convert parenthesized slash commands like (/plan), (/goal) directly to clean code pills
+  str = str.replace(/\(\/([a-zA-Z0-9_\-]+)\)/g, '<code class="code-pill" dir="ltr"><bdi>/$1</bdi></code>&rlm;');
+
+  // 2. Standalone /? command
+  str = str.replace(/(^|[\s\(\[\{־\-—])\/\?([\s\.,:;!?־\-—\)]|$)/g, '$1<code class="code-pill" dir="ltr"><bdi>/?</bdi></code>&rlm;$2');
+
+  // 3. Convert slash commands like /plan, /goal, /boost to inline code pills with <bdi dir="ltr">&rlm;
+  str = str.replace(/(^|[\s\(\[\{,\.:;־\-—/]|ל-|מ-|ב-|כ-|ש-|ה-)(\/([a-zA-Z0-9_\-]+))/g, (m, p1, p2, p3) => {
+    return `${p1}<code class="code-pill" dir="ltr"><bdi>/${p3}</bdi></code>&rlm;`;
+  });
+  return str;
+}
+
+function navModalItem(direction){
+  if(!currentModalItem) return;
+  let list = DATA.items;
+  if(viewMode === 'everyday' && activeCat === 'all' && !searchQ){
+    list = list.filter(i => i.tier === 'everyday');
+  } else if(activeCat === 'favs'){
+    list = list.filter(i => favs.includes(i.id));
+  } else if(activeCat !== 'all'){
+    list = list.filter(i => i.c === activeCat);
+  }
+  if(!list.length) list = DATA.items;
+  
+  const curIdx = list.findIndex(i => i.id === currentModalItem.id);
+  if(curIdx === -1) return;
+  
+  let nextIdx = curIdx + direction;
+  if(nextIdx >= list.length) nextIdx = 0;
+  if(nextIdx < 0) nextIdx = list.length - 1;
+  
+  openItemModal(list[nextIdx]);
+}
+
 // ONBOARDING
 function renderOnboarding(){
   const g = document.getElementById('onboardingGrid');
@@ -135,16 +229,16 @@ function renderOnboarding(){
         <div class="onboard-top">
           <span class="onboard-icon">${o.emoji}</span>
           <div>
-            <div class="onboard-name">${o.title}</div>
+            <div class="onboard-name">${formatTextSafe(o.title)}</div>
             <div class="onboard-badges">
               <span class="onboard-badge-en" dir="ltr">${o.en || ''}</span>
               <span class="onboard-badge-ph">${o.phonetic}</span>
             </div>
           </div>
         </div>
-        <div class="onboard-analogy">💡 ${o.analogy}</div>
+        <div class="onboard-analogy">💡 ${formatTextSafe(o.analogy)}</div>
       </div>
-      <div class="onboard-tip">⚡ ${o.tip}</div>
+      <div class="onboard-tip">⚡ ${formatTextSafe(o.tip)}</div>
     </div>
   `).join('');
 
@@ -170,19 +264,27 @@ document.getElementById('btnCloseOnboard').addEventListener('click', ()=>{
 function renderWizard(){
   const g = document.getElementById('wizardGrid');
   g.innerHTML = DATA.wizard.map(w=>{
-    let pills = '';
-    if(w.recList && Array.isArray(w.recList)){
-      pills = w.recList.map(r=>`<button class="wizard-rec-btn" onclick="openItemModalById('${r.id}')">${r.n}</button>`).join('');
-    } else if(w.rec){
-      const recArr = Array.isArray(w.rec) ? w.rec : w.rec.split(',');
-      pills = recArr.map(id=>`<button class="wizard-rec-btn" onclick="openItemModalById('${id.trim()}')">${id.trim()}</button>`).join('');
-    }
+    const recArr = (w.recList && Array.isArray(w.recList)) ? w.recList.map(x=>x.id) : (Array.isArray(w.rec) ? w.rec : (w.rec || '').split(','));
+    const pills = recArr.map(id => {
+      const cleanId = id.trim();
+      const it = DATA.items.find(x => x.id === cleanId || x.en === cleanId);
+      if(it){
+        const cmdBadge = it.en ? `<span class="wiz-pill-cmd" dir="ltr"><bdi>${escapeHtml(it.en)}</bdi></span>` : '';
+        const shortName = it.n.includes('—') ? it.n.split('—')[1].trim() : (it.n.includes('-') ? it.n.split('-')[1].trim() : it.n);
+        return `<button class="wizard-rec-btn" onclick="openItemModalById('${it.id}')" title="פתח ${escapeHtml(it.en || it.n)}">
+          <span>${it.e}</span>
+          ${cmdBadge}
+          <span class="wiz-pill-lbl">${escapeHtml(shortName)}</span>
+        </button>`;
+      }
+      return `<button class="wizard-rec-btn" onclick="openItemModalById('${cleanId}')">${cleanId}</button>`;
+    }).join('');
 
     return `
       <div class="wizard-card">
-        <div class="wizard-goal">${w.goal}</div>
-        <div class="wizard-desc">${w.desc}</div>
-        ${w.advice ? `<div class="wizard-advice">💡 ${w.advice}</div>` : ''}
+        <div class="wizard-goal">${escapeHtml(w.goal)}</div>
+        <div class="wizard-desc">${escapeHtml(w.desc)}</div>
+        ${w.advice ? `<div class="wizard-advice">💡 ${formatTextSafe(w.advice)}</div>` : ''}
         <div style="font-size:0.8rem;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;">כלים מומלצים למשימה זו (לחץ לפתיחה):</div>
         <div class="wizard-rec-pills">${pills}</div>
       </div>
@@ -194,14 +296,22 @@ function renderWizard(){
 function renderRecipes(){
   const g = document.getElementById('recipesGrid');
   g.innerHTML = DATA.recipes.map(r=>{
-    const stepPills = (r.steps || []).map(s=>`
-      <button class="wizard-rec-btn" onclick="openItemModalById('${s}')">${s}</button>
-    `).join(' <span style="color:var(--text-muted);font-size:0.75rem;">➔</span> ');
+    const stepPills = (r.steps || []).map(s=>{
+      const cleanId = s.trim();
+      const it = DATA.items.find(x => x.id === cleanId || x.en === cleanId);
+      if(it){
+        return `<button class="recipe-step-btn" onclick="openItemModalById('${it.id}')" title="לחץ לפרטי ${escapeHtml(it.en)}">
+          <span>${it.e}</span>
+          <bdi dir="ltr">${escapeHtml(it.en)}</bdi>
+        </button>`;
+      }
+      return `<button class="recipe-step-btn" onclick="openItemModalById('${cleanId}')"><bdi dir="ltr">${cleanId}</bdi></button>`;
+    }).join(' <span style="color:var(--text-muted);font-size:0.75rem;">➔</span> ');
 
     return `
       <div class="wizard-card">
-        <div class="wizard-goal">⚡ ${r.title}</div>
-        <div class="wizard-desc">${r.desc}</div>
+        <div class="wizard-goal">⚡ ${escapeHtml(r.title)}</div>
+        <div class="wizard-desc">${escapeHtml(r.desc)}</div>
         <div style="margin-bottom:10px;">
           <div style="font-size:0.8rem;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;">שרשרת הכלים בתהליך:</div>
           <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">${stepPills}</div>
@@ -239,12 +349,16 @@ function renderCategoryTabs(){
   const t = document.getElementById('catTabs');
   t.innerHTML = DATA.categories.map(c=>{
     let count = 0;
-    if(c.id === 'all') count = DATA.items.length;
-    else if(c.id === 'favs') count = favs.length;
-    else count = DATA.items.filter(i=>i.c===c.id).length;
+    if(c.id === 'all'){
+      count = viewMode === 'everyday' ? DATA.items.filter(i=>i.tier==='everyday').length : DATA.items.length;
+    } else if(c.id === 'favs'){
+      count = favs.length;
+    } else {
+      count = viewMode === 'everyday' ? DATA.items.filter(i=>i.c===c.id && i.tier==='everyday').length : DATA.items.filter(i=>i.c===c.id).length;
+    }
 
     const isActive = activeCat === c.id ? 'active' : '';
-    return `<button class="cat-tab ${isActive}" onclick="setCategory('${c.id}')">
+    return `<button class="cat-tab ${isActive}" id="catTab_${c.id}" onclick="setCategory('${c.id}')">
       <span>${c.name}</span>
       <span class="cat-count">${count}</span>
     </button>`;
@@ -256,12 +370,19 @@ function setCategory(cid){
   renderCategoryTabs();
   renderCards();
   sfxClick();
+  const activeBtn = document.getElementById('catTab_' + cid);
+  if(activeBtn){
+    try {
+      activeBtn.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+    }catch(e){}
+  }
 }
 
 function setViewMode(mode){
   viewMode = mode;
   document.getElementById('vtEveryday').classList.toggle('active', mode==='everyday');
   document.getElementById('vtAll').classList.toggle('active', mode==='all');
+  renderCategoryTabs();
   renderCards();
   sfxClick();
 }
@@ -285,23 +406,10 @@ searchClearBtn.addEventListener('click', ()=>{
   sfxClick();
 });
 
-function escapeRegExp(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function highlightMatch(text, query){
-  if(!query || !text) return text || '';
-  try{
-    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-    return String(text).replace(regex, '<mark class="highlight">$1</mark>');
-  }catch(e){
-    return text || '';
-  }
-}
-
 // RENDER CARDS
 function renderCards(){
   const g = document.getElementById('cardsGrid');
+  const searchStatus = document.getElementById('searchStatusBar');
   let filtered = DATA.items;
 
   // View Mode filter
@@ -313,7 +421,11 @@ function renderCards(){
   if(activeCat === 'favs'){
     filtered = filtered.filter(i => favs.includes(i.id));
   } else if(activeCat !== 'all'){
-    filtered = filtered.filter(i => i.c === activeCat);
+    if(viewMode === 'everyday' && !searchQ){
+      filtered = filtered.filter(i => i.c === activeCat && i.tier === 'everyday');
+    } else {
+      filtered = filtered.filter(i => i.c === activeCat);
+    }
   }
 
   // Search filter
@@ -329,6 +441,16 @@ function renderCards(){
       const matchPrompts = (it.prompts || []).some(p => p.toLowerCase().includes(q));
       return matchN || matchEn || matchDesc || matchSimple || matchCaps || matchTips || matchPrompts;
     });
+  }
+
+  // Update Search Status Bar
+  if(searchStatus){
+    if(searchQ){
+      searchStatus.style.display = 'inline-flex';
+      searchStatus.innerHTML = `<span>🔍 נמצאו <strong>${filtered.length}</strong> כלים תואמים לחיפוש "<strong>${escapeHtml(searchQ)}</strong>"</span>`;
+    } else {
+      searchStatus.style.display = 'none';
+    }
   }
 
   // FAVORITES PROMPT ACTION BAR IF IN FAVS
@@ -350,7 +472,7 @@ function renderCards(){
       <div style="grid-column:1/-1;text-align:center;padding:45px 16px;color:var(--text-secondary);">
         <div style="font-size:2.8rem;margin-bottom:12px;">🔍</div>
         <div style="font-size:1.15rem;font-weight:700;color:var(--text-primary);">לא נמצאו כלים תואמים</div>
-        <p style="margin-top:6px;font-size:0.9rem;">נסה לחפש מילה אחרת, לנקות את החיפוש או לעבור לתצוגת "קטלוג מלא"</p>
+        <p style="margin-top:6px;font-size:0.9rem;">נסה לחפש מילה אחרת, לנקות את החיפוש או לעבור לתצוגת "כל הכלים"</p>
         <button class="control-btn" style="margin-top:14px;" onclick="resetSearch()">נקה סינונים והצג הכל</button>
       </div>`;
     return;
@@ -366,9 +488,14 @@ function renderCards(){
     const tierLbl = it.tier === 'everyday' ? '🌟 יומיומי' : '🔬 ממוקד';
     const tierClass = it.tier === 'everyday' ? 'tier-everyday' : 'tier-niche';
 
-    const displayTitle = searchQ ? highlightMatch(it.n, searchQ) : it.n;
-    const displayEn = searchQ ? highlightMatch(it.en, searchQ) : it.en;
-    const displaySimple = searchQ ? highlightMatch(it.simple, searchQ) : it.simple;
+    const titleHtml = formatTitleSafe(it.n, searchQ);
+    let leftPart = '';
+    if(it.n.includes(' — ')) leftPart = it.n.split(' — ')[0].trim();
+    else if(it.n.includes(' - ')) leftPart = it.n.split(' - ')[0].trim();
+    const isEnRedundant = leftPart && it.en && (leftPart.toLowerCase() === it.en.trim().toLowerCase() || leftPart === '/' + it.id);
+    const displayEn = searchQ ? highlightMatch(escapeHtml(it.en), searchQ) : escapeHtml(it.en);
+    const enHtml = (!isEnRedundant && it.en) ? `<div class="card-en" dir="ltr"><bdi>${displayEn}</bdi></div>` : '';
+    const displaySimple = formatTextSafe(it.simple, searchQ);
 
     return `
       <div class="item-card" style="--card-accent:${accent};" onclick="openItemModalById('${it.id}')">
@@ -377,8 +504,8 @@ function renderCards(){
             <div class="card-identity">
               <span class="card-emoji">${it.e}</span>
               <div class="card-names">
-                <div class="card-title">${displayTitle}</div>
-                <div class="card-en" dir="ltr"><bdi>${displayEn}</bdi></div>
+                <div class="card-title">${titleHtml}</div>
+                ${enHtml}
               </div>
             </div>
             <div class="card-actions-quick" onclick="event.stopPropagation()">
@@ -389,7 +516,7 @@ function renderCards(){
           <div class="card-simple">${displaySimple}</div>
           
           <div class="card-caps">
-            ${(it.caps || []).slice(0, 4).map(c => `<span class="cap-pill">${searchQ ? highlightMatch(c, searchQ) : c}</span>`).join('')}
+            ${(it.caps || []).slice(0, 4).map(c => `<span class="cap-pill">${formatTextSafe(c, searchQ)}</span>`).join('')}
             ${(it.caps && it.caps.length > 4) ? `<span class="cap-pill">+${it.caps.length - 4}</span>` : ''}
           </div>
         </div>
@@ -443,6 +570,12 @@ function openItemModal(it){
   currentModalItem = it;
   sfxOpen();
 
+  // Reset TTS if speaking
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  isSpeaking = false;
+  const ttsBtn = document.getElementById('mBtnTTS');
+  if(ttsBtn) ttsBtn.textContent = '🔊 הקרא בעברית';
+
   // Update hash for deep link
   try {
     history.replaceState(null, '', '#tool-' + it.id);
@@ -454,17 +587,36 @@ function openItemModal(it){
 
   document.getElementById('itemModal').style.setProperty('--modal-accent', accent);
   document.getElementById('mEmoji').textContent = it.e;
-  document.getElementById('mTitle').textContent = it.n;
-  document.getElementById('mEnText').textContent = it.en + (it.u ? ' | שימוש: ' + it.u : '');
+  let modalTitle = it.n;
+  if(it.n && (it.n.includes(' — ') || it.n.includes(' - '))){
+    const sep = it.n.includes(' — ') ? ' — ' : ' - ';
+    const parts = it.n.split(sep);
+    const leftPart = parts[0].trim();
+    const rightPart = parts.slice(1).join(sep).trim();
+    if(leftPart && (leftPart.toLowerCase() === (it.en || '').trim().toLowerCase() || leftPart === '/' + it.id)){
+      modalTitle = rightPart;
+    }
+  }
+  document.getElementById('mTitle').innerHTML = formatTextSafe(modalTitle);
+  
+  const usageHtml = it.u ? `<span class="modal-usage-pill">⚡ דירוג שימוש: ${it.u}/10</span>` : '';
+  const tierHtml = `<span class="card-tier ${it.tier === 'everyday' ? 'tier-everyday' : 'tier-niche'}">${it.tier === 'everyday' ? '🌟 יומיומי' : '🔬 ממוקד'}</span>`;
+  document.getElementById('mEn').innerHTML = `
+    <div class="modal-meta-row">
+      <span class="modal-code-pill" dir="ltr"><bdi>${escapeHtml(it.en)}</bdi></span>
+      ${usageHtml}
+      ${tierHtml}
+    </div>
+  `;
   
   // Overview Tab
-  document.getElementById('mSimple').textContent = it.simple;
-  document.getElementById('mDesc').textContent = it.desc;
-  document.getElementById('mCaps').innerHTML = (it.caps || []).map(c => `<span class="cap-pill" style="background:rgba(0,240,255,0.1);color:var(--neon-cyan);border:1px solid rgba(0,240,255,0.25);">${c}</span>`).join('');
+  document.getElementById('mSimple').innerHTML = formatTextSafe(it.simple);
+  document.getElementById('mDesc').innerHTML = formatTextSafe(it.desc);
+  document.getElementById('mCaps').innerHTML = (it.caps || []).map(c => `<span class="cap-pill" style="background:rgba(0,240,255,0.1);color:var(--neon-cyan);border:1px solid rgba(0,240,255,0.25);">${formatTextSafe(c)}</span>`).join('');
   
   if(it.when && it.when.length){
     document.getElementById('mWhenBox').style.display = 'block';
-    document.getElementById('mWhen').innerHTML = it.when.map(w => `• ${w}`).join('<br>');
+    document.getElementById('mWhen').innerHTML = it.when.map(w => `• ${formatTextSafe(w)}`).join('<br>');
   } else {
     document.getElementById('mWhenBox').style.display = 'none';
   }
@@ -477,11 +629,11 @@ function openItemModal(it){
         if(colonIdx > -1){
           const termName = t.substring(0, colonIdx).trim();
           const termDesc = t.substring(colonIdx + 1).trim();
-          return `<div style="margin-bottom:6px;"><strong style="color:var(--neon-cyan);">${termName}:</strong> ${termDesc}</div>`;
+          return `<div style="margin-bottom:6px;"><strong style="color:var(--neon-cyan);"><bdi dir="ltr">${escapeHtml(termName)}</bdi>:</strong> ${formatTextSafe(termDesc)}</div>`;
         }
-        return `<div style="margin-bottom:6px;">• ${t}</div>`;
+        return `<div style="margin-bottom:6px;">• ${formatTextSafe(t)}</div>`;
       } else if(t && t.term){
-        return `<div style="margin-bottom:6px;"><strong style="color:var(--neon-cyan);">${t.term}:</strong> ${t.meaning || ''}</div>`;
+        return `<div style="margin-bottom:6px;"><strong style="color:var(--neon-cyan);"><bdi dir="ltr">${escapeHtml(t.term)}</bdi>:</strong> ${formatTextSafe(t.meaning || '')}</div>`;
       }
       return '';
     }).join('');
@@ -493,7 +645,7 @@ function openItemModal(it){
   const pList = document.getElementById('mPromptsList');
   pList.innerHTML = (it.prompts || []).map((p, idx) => `
     <div class="prompt-box">
-      <div class="prompt-text">${p}</div>
+      <div class="prompt-text" dir="rtl">${formatTextSafe(p)}</div>
       <button class="prompt-copy-btn" id="pBtn_${idx}" onclick="copyPromptText('${p.replace(/'/g, "\\'")}', 'pBtn_${idx}')">📋 העתק פרומפט זה</button>
     </div>
   `).join('') || '<p style="color:var(--text-secondary);">אין פרומפטים מוגדרים</p>';
@@ -503,23 +655,28 @@ function openItemModal(it){
   sList.innerHTML = (it.steps || []).map((s, idx) => `
     <div class="step-item">
       <div class="step-num">${idx+1}</div>
-      <div class="step-text">${s}</div>
+      <div class="step-text">${formatTextSafe(s)}</div>
     </div>
   `).join('') || '<p style="color:var(--text-secondary);">אין שלבי שימוש מוגדרים</p>';
 
   // Tips Tab
   const tList = document.getElementById('mTipsList');
   tList.innerHTML = (it.tips || []).map(t => `
-    <div class="tip-item">💡 ${t}</div>
+    <div class="tip-item">💡 ${formatTextSafe(t)}</div>
   `).join('') || '<p style="color:var(--text-secondary);">אין טיפים מוגדרים</p>';
 
   // Install Tab
-  document.getElementById('mInst').textContent = it.inst || 'סקיל מובנה / כלי מערכת פעיל ישירות.';
+  document.getElementById('mInst').innerHTML = `<code class="code-pill" style="font-size:0.92rem;padding:4px 10px;background:rgba(0,0,0,0.5);border:1px solid rgba(0,240,255,0.25);" dir="ltr"><bdi>${escapeHtml(it.inst || 'סקיל מובנה / כלי מערכת פעיל ישירות.')}</bdi></code>`;
   const relList = document.getElementById('mRel');
   relList.innerHTML = (it.rel || []).map(rId => {
     const rIt = DATA.items.find(x => x.id === rId);
-    const rName = rIt ? `${rIt.e} ${rIt.n}` : rId;
-    return `<button class="control-btn" style="padding:5px 12px;font-size:0.82rem;" onclick="openItemModalById('${rId}')">${rName}</button>`;
+    if(rIt){
+      return `<button class="control-btn" style="padding:5px 12px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;" onclick="openItemModalById('${rIt.id}')">
+        <span>${rIt.e}</span>
+        <bdi dir="ltr">${escapeHtml(rIt.en || rIt.id)}</bdi>
+      </button>`;
+    }
+    return `<button class="control-btn" style="padding:5px 12px;font-size:0.82rem;" onclick="openItemModalById('${rId}')">${rId}</button>`;
   }).join('') || '<span style="color:var(--text-secondary);">אין כלים קשורים</span>';
 
   // Default to overview tab
@@ -533,6 +690,9 @@ function closeItemModal(){
   document.getElementById('itemModal').classList.remove('active');
   document.body.style.overflow = '';
   if(window.speechSynthesis) window.speechSynthesis.cancel();
+  isSpeaking = false;
+  const ttsBtn = document.getElementById('mBtnTTS');
+  if(ttsBtn) ttsBtn.textContent = '🔊 הקרא בעברית';
   try {
     history.replaceState(null, '', window.location.pathname + window.location.search);
   } catch(e){}
@@ -606,19 +766,55 @@ function copyToolDirectLink(){
 function shareCurrentOnWhatsApp(){
   if(!currentModalItem) return;
   const link = `${BASE_SHARE_URL}#tool-${currentModalItem.id}`;
-  const text = `היי! מצאתי ב-Antigravity Explorer כלי מדהים: *${currentModalItem.n}* (${currentModalItem.en})\n\n💡 *מה זה עושה:* ${currentModalItem.simple}\n\n💬 *דוגמה לשימוש:*\n"${(currentModalItem.prompts && currentModalItem.prompts[0]) || currentModalItem.desc}"\n\n🔗 *לפתיחת הכלי:* ${link}\n\n✨ מתוך מדריך Antigravity Explorer v3.0 (בהכוונת נתן ליאני)`;
+  const text = `היי! מצאתי ב-Antigravity Explorer כלי מדהים: *${currentModalItem.n}* (${currentModalItem.en})\n\n💡 *מה זה עושה:* ${currentModalItem.simple}\n\n💬 *דוגמה לשימוש:*\n"${(currentModalItem.prompts && currentModalItem.prompts[0]) || currentModalItem.desc}"\n\n🔗 *לפתיחת הכלי:* ${link}\n\n✨ מתוך מדריך Antigravity Explorer v4.0 (בהכוונת נתן ליאני)`;
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
 }
 
+let isSpeaking = false;
 function speakCurrentTool(){
-  if(!currentModalItem || !window.speechSynthesis) return;
+  if(!currentModalItem) return;
+  if(!window.speechSynthesis){
+    showToast('הדפדפן אינו תומך בהקראה קולית');
+    return;
+  }
+  const btn = document.getElementById('mBtnTTS');
+  if(isSpeaking){
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    if(btn) btn.textContent = '🔊 הקרא בעברית';
+    showToast('ההקראה הופסקה');
+    return;
+  }
+
   window.speechSynthesis.cancel();
-  const text = `${currentModalItem.n}. ${currentModalItem.simple}. מתי כדאי להשתמש? ${(currentModalItem.when || []).join(', ')}`;
+  const cleanName = currentModalItem.n.replace(/[/—\-]/g, ' ');
+  const text = `${cleanName}. ${currentModalItem.simple}. מתי כדאי להשתמש? ${(currentModalItem.when || []).join(', ')}`;
   const ut = new SpeechSynthesisUtterance(text);
   ut.lang = 'he-IL';
+  ut.rate = 0.95;
+
+  try {
+    const voices = window.speechSynthesis.getVoices();
+    const heVoice = voices.find(v => v.lang && v.lang.startsWith('he'));
+    if(heVoice) ut.voice = heVoice;
+  } catch(e){}
+
+  ut.onstart = () => {
+    isSpeaking = true;
+    if(btn) btn.textContent = '⏹️ עצור הקראה';
+    showToast('מקריא כעת בעברית...');
+  };
+  ut.onend = () => {
+    isSpeaking = false;
+    if(btn) btn.textContent = '🔊 הקרא בעברית';
+  };
+  ut.onerror = () => {
+    isSpeaking = false;
+    if(btn) btn.textContent = '🔊 הקרא בעברית';
+  };
+
   window.speechSynthesis.speak(ut);
-  showToast('מקריא כעת בעברית...');
 }
 
 // FAVORITES

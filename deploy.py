@@ -28,7 +28,7 @@ def deploy():
     
     print('3. Staging and committing files...')
     subprocess.run(['git', 'add', '.'], check=True)
-    subprocess.run(['git', 'commit', '-m', '🚀 Antigravity Explorer v3.5 - Pixel-perfect responsive redesign, 120 everyday tools, zero overflow, synchronized in-place'], capture_output=True)
+    subprocess.run(['git', 'commit', '-m', '🚀 Antigravity Explorer v4.0 - Ultra-polished responsive redesign, BiDi perfection, modal browsing & synchronized deployment'], capture_output=True)
     subprocess.run(['git', 'branch', '-M', 'main'], check=True)
     
     print('4. Pushing to GitHub (origin main)...')

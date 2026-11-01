@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
 <meta name="theme-color" content="#05070f">
-<title>🚀 Antigravity Explorer v3.0 | מדריך הסוכנים, הפקודות והכלים השלם</title>
+<title>🚀 Antigravity Explorer v4.0 | מדריך הסוכנים, הפקודות והכלים השלם</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800;900&family=Fira+Code:wght@400;600&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
@@ -185,11 +185,10 @@ body{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  flex-wrap:wrap;
-  gap:6px;
+  gap:8px;
   background:rgba(0, 240, 255, 0.08);
   border:1px solid var(--neon-cyan);
-  padding:5px 14px;
+  padding:6px 16px;
   border-radius:var(--radius-full);
   font-size:clamp(0.74rem, 1.6vw, 0.84rem);
   font-weight:700;
@@ -213,8 +212,7 @@ body{
   font-weight:600;
   direction:ltr;
   unicode-bidi:embed;
-  word-break:normal;
-  overflow-wrap:anywhere;
+  white-space:nowrap;
 }
 
 .hero-title{
@@ -586,15 +584,31 @@ body{
 .search-clear-btn.active{display:block;}
 .search-clear-btn:hover{color:var(--neon-cyan);}
 
+.search-status-bar{
+  font-size:0.82rem;
+  color:var(--neon-cyan);
+  padding:5px 12px;
+  margin-top:6px;
+  background:rgba(0, 240, 255, 0.08);
+  border:1px solid rgba(0, 240, 255, 0.22);
+  border-radius:var(--radius-sm);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  width:100%;
+  box-sizing:border-box;
+}
+
 .view-toggle-wrap{
   display:flex;
   background:rgba(5, 9, 24, 0.88);
   border:1px solid var(--border-glass);
   border-radius:var(--radius-full);
   padding:3px;
-  gap:3px;
+  gap:4px;
   flex-shrink:0;
   max-width:100%;
+  box-sizing:border-box;
 }
 .view-toggle-btn{
   background:transparent;
@@ -608,6 +622,8 @@ body{
   transition:all 0.2s ease;
   font-family:var(--font-main);
   white-space:nowrap;
+  text-align:center;
+  box-sizing:border-box;
 }
 .view-toggle-btn.active{
   background:linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
@@ -615,7 +631,13 @@ body{
   box-shadow:0 0 15px rgba(0,240,255,0.4);
 }
 
-/* Category Filter Tabs */
+/* Category Filter Tabs Wrapper with subtle edge gradients */
+.cat-tabs-wrapper{
+  position:relative;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
 .cat-tabs{
   display:flex;
   gap:6px;
@@ -624,6 +646,7 @@ body{
   scrollbar-width:thin;
   -webkit-overflow-scrolling:touch;
   max-width:100%;
+  box-sizing:border-box;
 }
 .cat-tabs::-webkit-scrollbar{height:3px;}
 .cat-tabs::-webkit-scrollbar-thumb{background:var(--border-glass);border-radius:3px;}
@@ -660,6 +683,71 @@ body{
   padding:1px 6px;
   border-radius:var(--radius-full);
   font-size:0.72rem;
+}
+
+/* BiDi Safe Title Badges & Inline Code Pills */
+.badge-title-code{
+  font-family:var(--font-mono);
+  font-size:0.86rem;
+  font-weight:700;
+  color:var(--card-accent, var(--neon-cyan));
+  background:rgba(0, 240, 255, 0.1);
+  padding:2px 7px;
+  border-radius:5px;
+  border:1px solid rgba(0, 240, 255, 0.25);
+  display:inline-block;
+  vertical-align:middle;
+  letter-spacing:0.3px;
+}
+.title-sep{
+  color:var(--text-muted);
+  margin:0 4px;
+  display:inline-block;
+  vertical-align:middle;
+}
+.title-hebrew{
+  vertical-align:middle;
+}
+.code-pill{
+  font-family:var(--font-mono);
+  font-size:0.86em;
+  font-weight:600;
+  color:var(--neon-cyan);
+  background:rgba(0, 240, 255, 0.1);
+  padding:1px 6px;
+  border-radius:4px;
+  border:1px solid rgba(0, 240, 255, 0.22);
+  display:inline-block;
+  vertical-align:baseline;
+  line-height:1.2;
+}
+.recipe-step-btn{
+  background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.35);
+  color:var(--neon-gold);
+  border-radius:var(--radius-full);
+  font-size:0.78rem;
+  font-weight:700;
+  padding:3px 10px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  transition:all 0.2s ease;
+  font-family:var(--font-main);
+}
+.recipe-step-btn:hover{
+  background:var(--neon-gold);
+  color:#05070f;
+  box-shadow:0 0 12px rgba(255,215,0,0.4);
+}
+.wiz-pill-cmd{
+  font-family:var(--font-mono);
+  font-weight:700;
+  color:var(--neon-cyan);
+}
+.wiz-pill-lbl{
+  color:var(--text-primary);
 }
 
 /* Search Highlighting */
@@ -908,28 +996,53 @@ mark.highlight{
   to{opacity:1;transform:scale(1) translateY(0);}
 }
 
-.modal-close-btn{
+.modal-controls-top{
   position:absolute;
-  top:14px;
-  left:14px;
+  top:12px;
+  left:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  z-index:10;
+}
+.modal-nav-arrow{
   background:rgba(255,255,255,0.08);
-  border:none;
+  border:1px solid var(--border-glass);
   color:var(--text-primary);
-  width:36px;
-  height:36px;
-  border-radius:50%;
+  width:32px;
+  height:32px;
+  border-radius:var(--radius-sm);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.95rem;
+  transition:all 0.2s ease;
+}
+.modal-nav-arrow:hover{
+  background:var(--neon-cyan);
+  color:#05070f;
+  border-color:var(--neon-cyan);
+  box-shadow:0 0 10px rgba(0,240,255,0.4);
+}
+.modal-close-btn{
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--border-glass);
+  color:var(--text-primary);
+  width:32px;
+  height:32px;
+  border-radius:var(--radius-sm);
   font-size:1.15rem;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
   transition:all 0.2s ease;
-  z-index:10;
 }
 .modal-close-btn:hover{background:var(--neon-red);color:#fff;}
 
 .modal-inner-header{
-  padding:20px 20px 14px 20px;
+  padding:16px 20px 14px 20px;
   border-bottom:1px solid var(--border-glass);
   position:relative;
   flex-shrink:0;
@@ -938,25 +1051,50 @@ mark.highlight{
   display:flex;
   align-items:center;
   gap:12px;
-  padding-left:44px;
+  padding-left:114px;
 }
 .modal-emoji{
   font-size:2.5rem;
   flex-shrink:0;
 }
+.modal-titles{
+  min-width:0;
+  flex:1;
+}
 .modal-titles h2{
-  font-size:1.45rem;
+  font-size:1.35rem;
   font-weight:900;
   color:var(--text-primary);
   word-break:break-word;
+  line-height:1.3;
 }
-.modal-titles p{
+.modal-meta-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  margin-top:6px;
+}
+.modal-code-pill{
   font-family:var(--font-mono);
-  font-size:0.84rem;
+  font-size:0.85rem;
+  font-weight:700;
   color:var(--modal-accent, var(--neon-cyan));
-  direction:ltr;
-  text-align:right;
-  word-break:break-all;
+  background:rgba(0,0,0,0.45);
+  padding:3px 10px;
+  border-radius:6px;
+  border:1px solid rgba(0, 240, 255, 0.3);
+  display:inline-block;
+  letter-spacing:0.3px;
+}
+.modal-usage-pill{
+  font-size:0.75rem;
+  font-weight:700;
+  color:var(--neon-gold);
+  background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.3);
+  padding:3px 8px;
+  border-radius:var(--radius-full);
 }
 
 /* Modal Nav Tabs */
@@ -994,7 +1132,7 @@ mark.highlight{
 .modal-body-scrollable{
   flex:1 1 auto;
   overflow-y:auto;
-  padding:18px 20px;
+  padding:18px 20px 32px 20px;
   scrollbar-width:thin;
 }
 .modal-body-section{display:none;}
@@ -1005,10 +1143,14 @@ mark.highlight{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
-  padding:14px 20px;
+  padding:12px 20px;
   border-top:1px solid rgba(255,255,255,0.08);
-  background:rgba(6, 10, 26, 0.95);
+  background:rgba(6, 10, 26, 0.96);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
   flex-shrink:0;
+  box-sizing:border-box;
+  width:100%;
 }
 .btn-action{
   padding:8px 14px;
@@ -1243,26 +1385,70 @@ mark.highlight{
   .hero{padding:14px 8px 12px 8px;}
   .hero-title{font-size:1.35rem;}
   .credit-badge{font-size:0.75rem;padding:5px 10px;}
-  .live-url-badge{font-size:0.74rem;padding:4px 10px;}
+  .live-url-badge{
+    flex-direction:column;
+    gap:4px;
+    padding:8px 14px;
+    border-radius:var(--radius-md);
+    width:100%;
+    max-width:340px;
+    font-size:0.75rem;
+  }
+  .live-url-badge .url-text{
+    font-size:0.74rem;
+    white-space:nowrap;
+  }
   .top-controls{grid-template-columns:repeat(2, 1fr);gap:6px;}
   .control-btn{font-size:0.78rem;padding:7px 6px;}
-  .view-toggle-wrap{width:100%;}
-  .view-toggle-btn{flex:1;text-align:center;font-size:0.78rem;padding:6px 6px;}
+  .view-toggle-wrap{
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    padding:3px;
+    gap:4px;
+  }
+  .view-toggle-btn{
+    width:100%;
+    font-size:0.74rem;
+    padding:7px 4px;
+    white-space:normal;
+    line-height:1.2;
+    border-radius:var(--radius-full);
+  }
   .search-wrapper{min-width:100%;}
   .onboarding-grid{grid-template-columns:1fr;}
   .modal-overlay{padding:8px;}
   .modal-content{max-height:94vh;border-radius:var(--radius-md);}
-  .modal-inner-header{padding:14px 12px 10px 12px;}
-  .modal-header-main{padding-left:36px;}
-  .modal-emoji{font-size:2rem;}
-  .modal-titles h2{font-size:1.15rem;}
-  .modal-nav{padding:8px 10px;gap:4px;}
-  .modal-tab-btn{font-size:0.78rem;padding:5px 8px;}
-  .modal-body-scrollable{padding:12px 12px;}
-  .modal-action-bar{padding:10px 12px;}
-  .btn-action{flex:1 1 calc(50% - 4px);justify-content:center;font-size:0.78rem;padding:8px 8px;}
+  .modal-inner-header{padding:12px 10px 10px 10px;}
+  .modal-header-main{padding-left:96px;gap:8px;}
+  .modal-controls-top{top:10px;left:10px;gap:4px;}
+  .modal-nav-arrow, .modal-close-btn{width:28px;height:28px;font-size:0.85rem;}
+  .modal-emoji{font-size:1.85rem;}
+  .modal-titles h2{font-size:1.1rem;}
+  .modal-code-pill{font-size:0.76rem;padding:2px 8px;}
+  .modal-usage-pill{font-size:0.72rem;padding:2px 6px;}
+  .modal-nav{padding:6px 8px;gap:3px;}
+  .modal-tab-btn{font-size:0.76rem;padding:5px 6px;}
+  .modal-body-scrollable{padding:12px 12px 28px 12px;}
+  .modal-action-bar{padding:8px 10px;gap:6px;}
+  .btn-action{flex:1 1 calc(50% - 4px);justify-content:center;font-size:0.75rem;padding:7px 4px;border-radius:var(--radius-sm);}
   .compare-bar{flex-direction:column;border-radius:var(--radius-md);gap:6px;padding:8px 12px;width:calc(100% - 16px);bottom:10px;}
   .back-to-top{bottom:18px;left:14px;width:38px;height:38px;font-size:1.1rem;}
+}
+
+@media (max-width:360px){
+  .live-url-badge .url-text{
+    font-size:0.65rem;
+  }
+  .view-toggle-wrap{
+    grid-template-columns:1fr;
+    border-radius:var(--radius-md);
+  }
+  .view-toggle-btn{
+    border-radius:var(--radius-sm);
+    padding:8px 8px;
+    font-size:0.78rem;
+  }
 }
 </style>
 </head>
@@ -1288,7 +1474,7 @@ mark.highlight{
       <span>🌐 אתר קבוע ומתעדכן:</span>
       <span class="url-text" dir="ltr">natanliany-svg.github.io/antigravity-explorer</span>
     </a>
-    <h1 class="hero-title">ANTIGRAVITY EXPLORER v3.0</h1>
+    <h1 class="hero-title">ANTIGRAVITY EXPLORER v4.0</h1>
     <p class="hero-subtitle">המדריך הוויזואלי האינטראקטיבי והמקיף ביותר בעולם לכל הסוכנים, הפקודות, הסקילים ושרתי ה-MCP ב-Google Antigravity</p>
     
     <div class="top-controls">
@@ -1353,13 +1539,16 @@ mark.highlight{
       </div>
       
       <div class="view-toggle-wrap">
-        <button class="view-toggle-btn active" id="vtEveryday" onclick="setViewMode('everyday')">🌟 מומלץ (120 כלים יומיומיים)</button>
-        <button class="view-toggle-btn" id="vtAll" onclick="setViewMode('all')">🔬 קטלוג מלא (187 כלים)</button>
+        <button class="view-toggle-btn active" id="vtEveryday" onclick="setViewMode('everyday')">🌟 מומלצים (120)</button>
+        <button class="view-toggle-btn" id="vtAll" onclick="setViewMode('all')">🔬 כל הכלים (187)</button>
       </div>
     </div>
+    <div class="search-status-bar" id="searchStatusBar" style="display:none;"></div>
 
     <!-- Category Tabs -->
-    <div class="cat-tabs" id="catTabs"></div>
+    <div class="cat-tabs-wrapper">
+      <div class="cat-tabs" id="catTabs"></div>
+    </div>
   </div>
 
   <!-- Cards Grid -->
@@ -1368,7 +1557,7 @@ mark.highlight{
   <!-- Footer -->
   <footer class="footer">
     <p class="footer-credit">נוצר ב-AI ובהכוונת נתן ליאני ובאמצעות סיעתא דשמייא גדולה</p>
-    <p>Google Antigravity Explorer v3.0 | כתובת אתר קבועה ומתעדכנת: <a href="https://natanliany-svg.github.io/antigravity-explorer/" target="_blank" style="color:var(--neon-cyan);">natanliany-svg.github.io/antigravity-explorer</a></p>
+    <p>Google Antigravity Explorer v4.0 | כתובת אתר קבועה ומתעדכנת: <a href="https://natanliany-svg.github.io/antigravity-explorer/" target="_blank" style="color:var(--neon-cyan);">natanliany-svg.github.io/antigravity-explorer</a></p>
     <p style="color:var(--text-muted);font-size:0.78rem;margin-top:4px;">תומך במודלי 2026: Gemini 4 Argon, Gemini 3.8 Flash ו-Claude 5.5 | קיצורי מקשים: / לחיפוש מהיר, Escape לסגירה</p>
   </footer>
 
@@ -1377,14 +1566,18 @@ mark.highlight{
 <!-- Item Details Modal -->
 <div class="modal-overlay" id="itemModal" onclick="handleModalOverlayClick(event)">
   <div class="modal-content" id="modalContent">
-    <button class="modal-close-btn" onclick="closeItemModal()" title="סגור (Escape)">✕</button>
+    <div class="modal-controls-top">
+      <button class="modal-nav-arrow" id="mBtnPrev" onclick="navModalItem(-1)" title="הכלי הקודם (חץ ימינה)">➔</button>
+      <button class="modal-nav-arrow" id="mBtnNext" onclick="navModalItem(1)" title="הכלי הבא (חץ שמאלה)">⬅</button>
+      <button class="modal-close-btn" onclick="closeItemModal()" title="סגור (Escape)">✕</button>
+    </div>
     
     <div class="modal-inner-header">
       <div class="modal-header-main">
         <div class="modal-emoji" id="mEmoji">🚀</div>
         <div class="modal-titles">
           <h2 id="mTitle">שם הכלי</h2>
-          <p id="mEn" dir="ltr"><bdi id="mEnText">identifier</bdi></p>
+          <div id="mEn"></div>
         </div>
       </div>
     </div>
