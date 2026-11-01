@@ -147,7 +147,29 @@
         "gen-ui",
         "browser"
       ],
-      "advice": "התחילו עם /grill-me כדי לחדד מה בדיוק אתם רוצים, עברו ל-/plan לתוכנית עבודה, ואז תנו ל-/goal לבנות הכל ולבדוק עם /browser!"
+      "advice": "התחילו עם /grill-me כדי לחדד מה בדיוק אתם רוצים, עברו ל-/plan לתוכנית עבודה, ואז תנו ל-/goal לבנות הכל ולבדוק עם /browser!",
+      "recList": [
+        {
+          "id": "grill-me",
+          "n": "חידוד רעיונות (/grill-me)"
+        },
+        {
+          "id": "plan",
+          "n": "תכנון חכם (/plan)"
+        },
+        {
+          "id": "goal",
+          "n": "טייס אוטומטי (/goal)"
+        },
+        {
+          "id": "generative_ui",
+          "n": "ממשקים חיים (/generative_ui)"
+        },
+        {
+          "id": "browser",
+          "n": "בדיקה בדפדפן (/browser)"
+        }
+      ]
     },
     {
       "goal": "📅 לנהל יומן, מסמכים, אקסלים ומצגות בגוגל",
@@ -159,7 +181,29 @@
         "gsheets",
         "gslides"
       ],
-      "advice": "כל 5 כלי Google Workspace כבר מותקנים אצלכם! פשוט בקשו בעברית רגילה או הקלידו /gcalendar, /gdrive וכו'."
+      "advice": "כל 5 כלי Google Workspace כבר מותקנים אצלכם! פשוט בקשו בעברית רגילה או הקלידו /gcalendar, /gdrive וכו'.",
+      "recList": [
+        {
+          "id": "gcalendar",
+          "n": "יומן גוגל (gcalendar)"
+        },
+        {
+          "id": "gdrive",
+          "n": "גוגל דרייב (gdrive)"
+        },
+        {
+          "id": "gdocs",
+          "n": "גוגל דוקס (gdocs)"
+        },
+        {
+          "id": "gsheets",
+          "n": "גוגל שיטס (gsheets)"
+        },
+        {
+          "id": "gslides",
+          "n": "גוגל מצגות (gslides)"
+        }
+      ]
     },
     {
       "goal": "🐛 לתקן תקלה מעצבנת או לשפר קוד קיים",
@@ -171,7 +215,29 @@
         "rewind",
         "learn"
       ],
-      "advice": "הפעילו /boost לבעיות קשות במיוחד, או /browser כדי שהסוכן יראה בעיניים את השגיאה בדפדפן ויתקן אותה."
+      "advice": "הפעילו /boost לבעיות קשות במיוחד, או /browser כדי שהסוכן יראה בעיניים את השגיאה בדפדפן ויתקן אותה.",
+      "recList": [
+        {
+          "id": "boost",
+          "n": "מועצת מומחים (/boost)"
+        },
+        {
+          "id": "browser",
+          "n": "דפדפן חי (/browser)"
+        },
+        {
+          "id": "diff",
+          "n": "השוואת שינויים (/diff)"
+        },
+        {
+          "id": "rewind",
+          "n": "חזרה בזמן (/rewind)"
+        },
+        {
+          "id": "learn",
+          "n": "שמירת לקחים (/learn)"
+        }
+      ]
     },
     {
       "goal": "👥 להריץ פרויקט ענק במהירות שיא עם כמה סוכנים",
@@ -182,7 +248,21 @@
         "subagent-sys",
         "remote-control"
       ],
-      "advice": "השתמשו ב-/teamwork כדי להקים צוות סוכנים שלם, וב-/remote-control כדי לעקוב אחריהם גם מהטלפון שלכם!"
+      "advice": "השתמשו ב-/teamwork כדי להקים צוות סוכנים שלם, וב-/remote-control כדי לעקוב אחריהם גם מהטלפון שלכם!",
+      "recList": [
+        {
+          "id": "teamwork",
+          "n": "צוות סוכנים (/teamwork)"
+        },
+        {
+          "id": "run-workflow",
+          "n": "הרצת תהליכים (/run-workflow)"
+        },
+        {
+          "id": "remote-control",
+          "n": "שליטה מהטלפון (/remote-control)"
+        }
+      ]
     },
     {
       "goal": "📱 לפתח לאנדרואיד או לשלב יכולות AI של Gemini",
@@ -194,7 +274,25 @@
         "gemini-live-api-dev",
         "gemini-omni-flash-api"
       ],
-      "advice": "חלון ה-Android Device Hub מאפשר לראות ולשלוט במכשיר אנדרואיד חי בתוך המסך, וסקילי Gemini נותנים קוד מוכן לווידאו וקול חי!"
+      "advice": "חלון ה-Android Device Hub מאפשר לראות ולשלוט במכשיר אנדרואיד חי בתוך המסך, וסקילי Gemini נותנים קוד מוכן לווידאו וקול חי!",
+      "recList": [
+        {
+          "id": "android-device-hub",
+          "n": "אמולטור אנדרואיד חי"
+        },
+        {
+          "id": "compose-preview",
+          "n": "תצוגת Compose"
+        },
+        {
+          "id": "gemini-api-dev",
+          "n": "Gemini API"
+        },
+        {
+          "id": "gemini-live-api-dev",
+          "n": "Gemini Live קול ווידאו"
+        }
+      ]
     },
     {
       "goal": "☁️ לנתח דאטה, BigQuery או מחקר מדעי",
@@ -206,7 +304,25 @@
         "arxiv",
         "pubmed"
       ],
-      "advice": "השתמשו ב-building-data-apps כדי להקים דשבורד חי עם צ'אט על הנתונים שלכם, או בחיפוש המאמרים האקדמיים."
+      "advice": "השתמשו ב-building-data-apps כדי להקים דשבורד חי עם צ'אט על הנתונים שלכם, או בחיפוש המאמרים האקדמיים.",
+      "recList": [
+        {
+          "id": "building-data-apps",
+          "n": "דשבורד נתונים חי"
+        },
+        {
+          "id": "bigquery-sql",
+          "n": "שאילתות BigQuery"
+        },
+        {
+          "id": "literature-search-arxiv",
+          "n": "חיפוש מאמרים ב-arXiv"
+        },
+        {
+          "id": "pubmed-database",
+          "n": "מאגר רפואי PubMed"
+        }
+      ]
     }
   ],
   "recipes": [
@@ -315,7 +431,8 @@
         "boost",
         "teamwork-preview"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "goal",
@@ -360,7 +477,8 @@
         "teamwork-preview",
         "schedule"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "boost",
@@ -404,7 +522,8 @@
         "plan",
         "teamwork-preview"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "teamwork-preview",
@@ -449,7 +568,8 @@
         "subagent-sys",
         "run-workflow"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "browser",
@@ -493,7 +613,8 @@
         "chrome-mcp",
         "builtin-browser-pdf"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "compact",
@@ -537,7 +658,8 @@
         "clear",
         "effort"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "grill-me",
@@ -580,7 +702,8 @@
         "plan",
         "goal"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "learn",
@@ -624,7 +747,8 @@
         "agy-custom",
         "hebrew-dev-mentor"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "btw",
@@ -666,7 +790,8 @@
         "copy",
         "context"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "remote-control",
@@ -707,7 +832,8 @@
         "schedule",
         "automation"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "generative-ui-cmd",
@@ -749,7 +875,8 @@
         "img-gen",
         "artifacts"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "schedule",
@@ -791,7 +918,8 @@
         "automation",
         "task-mgmt"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "automation",
@@ -833,7 +961,8 @@
         "scheduling",
         "gcalendar"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "plugin-cmd",
@@ -875,7 +1004,8 @@
         "skill-repair",
         "ui-plugin-navigation"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "effort",
@@ -916,7 +1046,8 @@
         "model",
         "usage"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "context",
@@ -956,7 +1087,8 @@
         "usage",
         "clear"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "rewind",
@@ -996,7 +1128,8 @@
         "fork",
         "diff"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "fork",
@@ -1035,7 +1168,8 @@
         "rewind",
         "resume"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "diff",
@@ -1073,7 +1207,8 @@
         "rewind",
         "file-ops"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "voice",
@@ -1112,7 +1247,8 @@
         "grill-me",
         "gemini-live-api-dev"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "agents-cmd",
@@ -1151,7 +1287,8 @@
         "subagent-sys",
         "custom-subagents"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "model-cmd",
@@ -1189,7 +1326,8 @@
         "effort",
         "models-2026"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "mcp-cmd",
@@ -1228,7 +1366,8 @@
         "agy-custom",
         "chrome-mcp"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "skills-cmd",
@@ -1268,7 +1407,8 @@
         "wf-creator",
         "skill-repair"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "cli-power-cmds",
@@ -1311,7 +1451,8 @@
         "context",
         "task-mgmt"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "hooks-permissions-cmds",
@@ -1352,7 +1493,8 @@
         "sandbox-wsl",
         "agy-custom"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "file-ops",
@@ -1391,7 +1533,8 @@
         "diff",
         "office-zip-pdf"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "shell-cmd",
@@ -1430,7 +1573,8 @@
         "sandbox-wsl",
         "permissioned-github"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "gen-ui",
@@ -1469,7 +1613,8 @@
         "artifacts",
         "img-gen"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "at-mentions",
@@ -1511,7 +1656,8 @@
         "resume",
         "mcp-cmd"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "web-search",
@@ -1551,7 +1697,8 @@
         "firecrawl-mcp",
         "context7-mcp"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "url-reader",
@@ -1587,7 +1734,8 @@
         "web-search",
         "browser"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "img-gen",
@@ -1626,7 +1774,8 @@
         "gen-ui",
         "gemini-omni-flash-api"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "browser-auto",
@@ -1664,7 +1813,8 @@
         "chrome-mcp",
         "playwright-mcp"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "subagent-sys",
@@ -1703,7 +1853,8 @@
         "self-agent",
         "research-agent"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "artifacts",
@@ -1741,7 +1892,8 @@
         "gen-ui",
         "office-zip-pdf"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "builtin-browser-pdf",
@@ -1779,7 +1931,8 @@
         "ui-plugin-navigation",
         "office-zip-pdf"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "conv-navigator",
@@ -1815,7 +1968,8 @@
         "at-mentions",
         "artifacts"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "models-2026",
@@ -1852,7 +2006,8 @@
         "model-cmd",
         "effort"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "office-zip-pdf",
@@ -1891,7 +2046,8 @@
         "at-mentions",
         "gdrive"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "task-mgmt",
@@ -1928,7 +2084,8 @@
         "cli-power-cmds",
         "scheduling"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "scheduling",
@@ -1965,7 +2122,8 @@
         "automation",
         "task-mgmt"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "sandbox-wsl",
@@ -2002,7 +2160,8 @@
         "shell-cmd",
         "accidental-data-loss-prevention"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "gcalendar",
@@ -2044,7 +2203,8 @@
         "gdocs",
         "automation"
       ],
-      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gcalendar)"
+      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gcalendar)",
+      "tier": "everyday"
     },
     {
       "id": "gdrive",
@@ -2085,7 +2245,8 @@
         "gsheets",
         "gslides"
       ],
-      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gdrive)"
+      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gdrive)",
+      "tier": "everyday"
     },
     {
       "id": "gdocs",
@@ -2125,7 +2286,8 @@
         "gsheets",
         "gslides"
       ],
-      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gdocs)"
+      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gdocs)",
+      "tier": "everyday"
     },
     {
       "id": "gsheets",
@@ -2165,7 +2327,8 @@
         "gdocs",
         "viz-mcp"
       ],
-      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gsheets)"
+      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gsheets)",
+      "tier": "everyday"
     },
     {
       "id": "gslides",
@@ -2205,7 +2368,8 @@
         "gdrive",
         "gen-ui"
       ],
-      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gslides)"
+      "inst": "מותקן ומוכן לשימוש במחשב שלך! (פלאגין gslides)",
+      "tier": "everyday"
     },
     {
       "id": "self-agent",
@@ -2242,7 +2406,8 @@
         "subagent-sys",
         "teamwork-preview"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "research-agent",
@@ -2279,7 +2444,8 @@
         "plan",
         "boost"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "custom-subagents",
@@ -2316,7 +2482,8 @@
         "subagent-sys",
         "agy-custom"
       ],
-      "inst": "מובנה ב-Antigravity (תיקיית ~/.gemini/agents או .agents/agents)"
+      "inst": "מובנה ב-Antigravity (תיקיית ~/.gemini/agents או .agents/agents)",
+      "tier": "everyday"
     },
     {
       "id": "lifecycle-hooks",
@@ -2353,7 +2520,8 @@
         "agy-custom",
         "accidental-data-loss-prevention"
       ],
-      "inst": "מובנה ב-Antigravity (מוגדר ב-hooks.json)"
+      "inst": "מובנה ב-Antigravity (מוגדר ב-hooks.json)",
+      "tier": "everyday"
     },
     {
       "id": "chrome-mcp",
@@ -2389,7 +2557,8 @@
         "browser",
         "browser-auto"
       ],
-      "inst": "שרת MCP מובנה ופעיל."
+      "inst": "שרת MCP מובנה ופעיל.",
+      "tier": "everyday"
     },
     {
       "id": "notebooks-mcp",
@@ -2426,7 +2595,8 @@
         "notebook-guidance",
         "developing-with-bigquery"
       ],
-      "inst": "שרת MCP מותקן ופעיל."
+      "inst": "שרת MCP מותקן ופעיל.",
+      "tier": "everyday"
     },
     {
       "id": "viz-mcp",
@@ -2463,7 +2633,8 @@
         "gen-ui",
         "gsheets"
       ],
-      "inst": "שרת MCP מותקן ופעיל."
+      "inst": "שרת MCP מותקן ופעיל.",
+      "tier": "everyday"
     },
     {
       "id": "gemini-docs-mcp",
@@ -2500,7 +2671,8 @@
         "gemini-live-api-dev",
         "gemini-omni-flash-api"
       ],
-      "inst": "שרת MCP מותקן ופעיל (פלאגין gemini-api)."
+      "inst": "שרת MCP מותקן ופעיל (פלאגין gemini-api).",
+      "tier": "everyday"
     },
     {
       "id": "dev-knowledge-mcp",
@@ -2537,7 +2709,8 @@
         "android-cli",
         "firebase-plugin"
       ],
-      "inst": "שרת MCP מותקן ופעיל."
+      "inst": "שרת MCP מותקן ופעיל.",
+      "tier": "everyday"
     },
     {
       "id": "molstar-mcp",
@@ -2574,7 +2747,8 @@
         "alphafold",
         "pdb"
       ],
-      "inst": "שרת MCP מותקן ופעיל (פלאגין science)."
+      "inst": "שרת MCP מותקן ופעיל (פלאגין science).",
+      "tier": "everyday"
     },
     {
       "id": "antimetal-mcp",
@@ -2609,7 +2783,8 @@
       "rel": [
         "dak-cloud-mcps"
       ],
-      "inst": "שרת MCP מובנה."
+      "inst": "שרת MCP מובנה.",
+      "tier": "everyday"
     },
     {
       "id": "direct-messaging",
@@ -2646,7 +2821,8 @@
         "teamwork-preview",
         "boost"
       ],
-      "inst": "מובנה בליבת Antigravity."
+      "inst": "מובנה בליבת Antigravity.",
+      "tier": "everyday"
     },
     {
       "id": "hebrew-dev-mentor",
@@ -2687,7 +2863,8 @@
         "agy-guide",
         "gen-ui"
       ],
-      "inst": "מותקן בתיקיית הסקילים האישית שלך (~/.gemini/antigravity/skills/hebrew-dev-mentor)."
+      "inst": "מותקן בתיקיית הסקילים האישית שלך (~/.gemini/antigravity/skills/hebrew-dev-mentor).",
+      "tier": "everyday"
     },
     {
       "id": "android-device-hub",
@@ -2729,7 +2906,8 @@
         "compose-preview",
         "ui-plugin-navigation"
       ],
-      "inst": "מותקן ופעיל (פלאגין android-cli-plugin)."
+      "inst": "מותקן ופעיל (פלאגין android-cli-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "compose-preview",
@@ -2765,7 +2943,8 @@
         "android-device-hub",
         "android-cli"
       ],
-      "inst": "מותקן ופעיל (פלאגין android-cli-plugin)."
+      "inst": "מותקן ופעיל (פלאגין android-cli-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "android-cli",
@@ -2803,7 +2982,8 @@
         "compose-preview",
         "flutter-plugin"
       ],
-      "inst": "מותקן ופעיל (פלאגין android-cli-plugin)."
+      "inst": "מותקן ופעיל (פלאגין android-cli-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "gemini-api-dev",
@@ -2842,7 +3022,8 @@
         "gemini-omni-flash-api",
         "gemini-docs-mcp"
       ],
-      "inst": "מותקן ופעיל (פלאגין gemini-api)."
+      "inst": "מותקן ופעיל (פלאגין gemini-api).",
+      "tier": "everyday"
     },
     {
       "id": "gemini-live-api-dev",
@@ -2880,7 +3061,8 @@
         "gemini-omni-flash-api",
         "voice"
       ],
-      "inst": "מותקן ופעיל (פלאגין gemini-api)."
+      "inst": "מותקן ופעיל (פלאגין gemini-api).",
+      "tier": "everyday"
     },
     {
       "id": "gemini-omni-flash-api",
@@ -2917,7 +3099,8 @@
         "gemini-api-dev",
         "img-gen"
       ],
-      "inst": "מותקן ופעיל (פלאגין gemini-api)."
+      "inst": "מותקן ופעיל (פלאגין gemini-api).",
+      "tier": "everyday"
     },
     {
       "id": "run-workflow",
@@ -2954,7 +3137,8 @@
         "subagent-sys",
         "wf-creator"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "wf-creator",
@@ -2991,7 +3175,8 @@
         "agy-custom",
         "skills-cmd"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "agy-guide",
@@ -3029,7 +3214,8 @@
         "plugin-cmd",
         "skills-cmd"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "agy-custom",
@@ -3066,7 +3252,8 @@
         "learn",
         "wf-creator"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "permissioned-github",
@@ -3102,7 +3289,8 @@
         "github-mcp",
         "shell-cmd"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "ui-plugin-navigation",
@@ -3138,7 +3326,8 @@
         "compose-preview",
         "biomolecular-viewer"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "retrieving-developer-knowledge",
@@ -3173,7 +3362,8 @@
         "dev-knowledge-mcp",
         "gemini-api-dev"
       ],
-      "inst": "מותקן ופעיל (פלאגין google-developer-knowledge)."
+      "inst": "מותקן ופעיל (פלאגין google-developer-knowledge).",
+      "tier": "everyday"
     },
     {
       "id": "skill-repair",
@@ -3210,7 +3400,8 @@
         "skills-cmd",
         "migrate-wf"
       ],
-      "inst": "מותקן ופעיל בתיקיית הסקילים."
+      "inst": "מותקן ופעיל בתיקיית הסקילים.",
+      "tier": "everyday"
     },
     {
       "id": "migrate-wf",
@@ -3246,7 +3437,8 @@
         "wf-creator",
         "agy-custom"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "uv-tool",
@@ -3281,7 +3473,8 @@
         "managing-python-dependencies",
         "shell-cmd"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "credentials",
@@ -3317,7 +3510,8 @@
         "google-cloud-auth-verification",
         "permissioned-github"
       ],
-      "inst": "סקיל מובנה במערכת."
+      "inst": "סקיל מובנה במערכת.",
+      "tier": "everyday"
     },
     {
       "id": "firebase-plugin",
@@ -3353,7 +3547,8 @@
         "supabase-mcp",
         "vercel-mcp"
       ],
-      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/firebase)."
+      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/firebase).",
+      "tier": "everyday"
     },
     {
       "id": "flutter-plugin",
@@ -3388,7 +3583,8 @@
         "android-device-hub",
         "android-cli"
       ],
-      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/flutter)."
+      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/flutter).",
+      "tier": "everyday"
     },
     {
       "id": "gmaps-plugin",
@@ -3423,7 +3619,8 @@
         "gen-ui",
         "retrieving-developer-knowledge"
       ],
-      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/google_maps_platform)."
+      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/google_maps_platform).",
+      "tier": "everyday"
     },
     {
       "id": "modern-web-plugin",
@@ -3458,7 +3655,8 @@
         "gen-ui",
         "browser"
       ],
-      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/modern-web-guidance-plugin)."
+      "inst": "זמין דרך /plugin (נמצא ב-config/plugins/modern-web-guidance-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "agy-sdk-plugin",
@@ -3493,7 +3691,8 @@
         "run-workflow",
         "agy-guide"
       ],
-      "inst": "זמין דרך /plugin ו-GitHub (google-antigravity/antigravity-sdk-python)."
+      "inst": "זמין דרך /plugin ו-GitHub (google-antigravity/antigravity-sdk-python).",
+      "tier": "everyday"
     },
     {
       "id": "context7-mcp",
@@ -3532,7 +3731,8 @@
         "gemini-docs-mcp",
         "web-search"
       ],
-      "inst": "npx -y @upstash/context7-mcp"
+      "inst": "npx -y @upstash/context7-mcp",
+      "tier": "everyday"
     },
     {
       "id": "seq-thinking-mcp",
@@ -3569,7 +3769,8 @@
         "plan",
         "boost"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-sequential-thinking"
+      "inst": "npx -y @modelcontextprotocol/server-sequential-thinking",
+      "tier": "everyday"
     },
     {
       "id": "firecrawl-mcp",
@@ -3606,7 +3807,8 @@
         "web-search",
         "exa-mcp"
       ],
-      "inst": "npx -y firecrawl-mcp\n(דורש FIRECRAWL_API_KEY)"
+      "inst": "npx -y firecrawl-mcp\n(דורש FIRECRAWL_API_KEY)",
+      "tier": "everyday"
     },
     {
       "id": "exa-mcp",
@@ -3643,7 +3845,8 @@
         "brave-mcp",
         "firecrawl-mcp"
       ],
-      "inst": "npx -y exa-mcp-server\n(דורש EXA_API_KEY)"
+      "inst": "npx -y exa-mcp-server\n(דורש EXA_API_KEY)",
+      "tier": "everyday"
     },
     {
       "id": "github-mcp",
@@ -3680,7 +3883,8 @@
         "vercel-mcp",
         "sentry-mcp"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-github"
+      "inst": "npx -y @modelcontextprotocol/server-github",
+      "tier": "everyday"
     },
     {
       "id": "supabase-mcp",
@@ -3717,7 +3921,8 @@
         "firebase-plugin",
         "vercel-mcp"
       ],
-      "inst": "npx -y @supabase/mcp-server-supabase@latest"
+      "inst": "npx -y @supabase/mcp-server-supabase@latest",
+      "tier": "everyday"
     },
     {
       "id": "playwright-mcp",
@@ -3754,7 +3959,8 @@
         "browser-auto",
         "chrome-mcp"
       ],
-      "inst": "npx -y @playwright/mcp@latest"
+      "inst": "npx -y @playwright/mcp@latest",
+      "tier": "everyday"
     },
     {
       "id": "vercel-mcp",
@@ -3791,7 +3997,8 @@
         "cloudflare-mcp",
         "firebase-plugin"
       ],
-      "inst": "npx -y @vercel/mcp"
+      "inst": "npx -y @vercel/mcp",
+      "tier": "everyday"
     },
     {
       "id": "postgres-mcp",
@@ -3828,7 +4035,8 @@
         "sqlite-mcp",
         "dak-cloud-mcps"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-postgres postgresql://user:pass@localhost/db"
+      "inst": "npx -y @modelcontextprotocol/server-postgres postgresql://user:pass@localhost/db",
+      "tier": "everyday"
     },
     {
       "id": "sqlite-mcp",
@@ -3864,7 +4072,8 @@
         "postgres-mcp",
         "file-ops"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-sqlite path/to/db.sqlite"
+      "inst": "npx -y @modelcontextprotocol/server-sqlite path/to/db.sqlite",
+      "tier": "everyday"
     },
     {
       "id": "memory-mcp",
@@ -3900,7 +4109,8 @@
         "learn",
         "agy-custom"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-memory"
+      "inst": "npx -y @modelcontextprotocol/server-memory",
+      "tier": "everyday"
     },
     {
       "id": "figma-mcp",
@@ -3935,7 +4145,8 @@
         "gen-ui",
         "img-gen"
       ],
-      "inst": "npx -y figma-developer-mcp --figma-api-key=YOUR_KEY"
+      "inst": "npx -y figma-developer-mcp --figma-api-key=YOUR_KEY",
+      "tier": "everyday"
     },
     {
       "id": "notion-mcp",
@@ -3971,7 +4182,8 @@
         "gdrive",
         "linear-mcp"
       ],
-      "inst": "npx -y @notionhq/notion-mcp-server"
+      "inst": "npx -y @notionhq/notion-mcp-server",
+      "tier": "everyday"
     },
     {
       "id": "docker-mcp",
@@ -4007,7 +4219,8 @@
         "shell-cmd",
         "sandbox-wsl"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-docker"
+      "inst": "npx -y @modelcontextprotocol/server-docker",
+      "tier": "everyday"
     },
     {
       "id": "brave-mcp",
@@ -4042,7 +4255,8 @@
         "web-search",
         "exa-mcp"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-brave-search"
+      "inst": "npx -y @modelcontextprotocol/server-brave-search",
+      "tier": "everyday"
     },
     {
       "id": "cloudflare-mcp",
@@ -4078,7 +4292,8 @@
         "vercel-mcp",
         "github-mcp"
       ],
-      "inst": "npx -y @cloudflare/mcp-server-cloudflare"
+      "inst": "npx -y @cloudflare/mcp-server-cloudflare",
+      "tier": "everyday"
     },
     {
       "id": "stripe-mcp",
@@ -4114,7 +4329,8 @@
         "supabase-mcp",
         "vercel-mcp"
       ],
-      "inst": "npx -y @stripe/mcp --tools=all"
+      "inst": "npx -y @stripe/mcp --tools=all",
+      "tier": "everyday"
     },
     {
       "id": "sentry-mcp",
@@ -4149,7 +4365,8 @@
         "github-mcp",
         "boost"
       ],
-      "inst": "npx -y @sentry/mcp-server"
+      "inst": "npx -y @sentry/mcp-server",
+      "tier": "everyday"
     },
     {
       "id": "slack-mcp",
@@ -4184,7 +4401,8 @@
         "automation",
         "linear-mcp"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-slack"
+      "inst": "npx -y @modelcontextprotocol/server-slack",
+      "tier": "everyday"
     },
     {
       "id": "linear-mcp",
@@ -4219,7 +4437,8 @@
         "github-mcp",
         "notion-mcp"
       ],
-      "inst": "npx -y mcp-remote https://mcp.linear.app/sse"
+      "inst": "npx -y mcp-remote https://mcp.linear.app/sse",
+      "tier": "everyday"
     },
     {
       "id": "redis-mcp",
@@ -4254,7 +4473,8 @@
         "postgres-mcp",
         "supabase-mcp"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379"
+      "inst": "npx -y @modelcontextprotocol/server-redis redis://localhost:6379",
+      "tier": "everyday"
     },
     {
       "id": "filesystem-mcp",
@@ -4289,7 +4509,8 @@
         "file-ops",
         "sandbox-wsl"
       ],
-      "inst": "npx -y @modelcontextprotocol/server-filesystem C:/Users/natan/Desktop"
+      "inst": "npx -y @modelcontextprotocol/server-filesystem C:/Users/natan/Desktop",
+      "tier": "everyday"
     },
     {
       "id": "git-mcp",
@@ -4325,7 +4546,8 @@
         "github-mcp",
         "permissioned-github"
       ],
-      "inst": "uvx mcp-server-git"
+      "inst": "uvx mcp-server-git",
+      "tier": "everyday"
     },
     {
       "id": "neon-mcp",
@@ -4362,7 +4584,8 @@
         "supabase-mcp",
         "vercel-mcp"
       ],
-      "inst": "npx -y @neondatabase/mcp-server-neon"
+      "inst": "npx -y @neondatabase/mcp-server-neon",
+      "tier": "everyday"
     },
     {
       "id": "youtube-transcript-mcp",
@@ -4399,7 +4622,8 @@
         "url-reader",
         "hebrew-dev-mentor"
       ],
-      "inst": "npx -y @kimtaeyoon83/mcp-server-youtube-transcript"
+      "inst": "npx -y @kimtaeyoon83/mcp-server-youtube-transcript",
+      "tier": "everyday"
     },
     {
       "id": "building-data-apps",
@@ -4436,7 +4660,8 @@
         "gen-ui",
         "viz-mcp"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "accidental-data-loss-prevention",
@@ -4473,7 +4698,8 @@
         "hooks-permissions-cmds",
         "bigquery-sql"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "developing-with-bigquery",
@@ -4509,7 +4735,8 @@
         "bigquery-ai-ml",
         "bigquery-bigframes"
       ],
-      "inst": "מותקן בתיקיית הסקילים האישית (~/.gemini/antigravity/skills)."
+      "inst": "מותקן בתיקיית הסקילים האישית (~/.gemini/antigravity/skills).",
+      "tier": "niche"
     },
     {
       "id": "ml-best-practices",
@@ -4546,7 +4773,8 @@
         "notebook-guidance",
         "viz-mcp"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "managing-python-dependencies",
@@ -4581,7 +4809,8 @@
         "uv-tool",
         "shell-cmd"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "notebook-guidance",
@@ -4616,7 +4845,8 @@
         "notebooks-mcp",
         "ml-best-practices"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "data-autocleaning",
@@ -4652,7 +4882,8 @@
         "bigquery-sql",
         "schema-mapping"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "bigquery-sql",
@@ -4687,7 +4918,8 @@
         "developing-with-bigquery",
         "bigquery-ai-ml"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "bigquery-ai-ml",
@@ -4723,7 +4955,8 @@
         "developing-with-bigquery",
         "ml-best-practices"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "bigquery-bigframes",
@@ -4758,7 +4991,8 @@
         "developing-with-bigquery",
         "notebook-guidance"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "discovering-gcp-data-assets",
@@ -4793,7 +5027,8 @@
         "dak-cloud-mcps",
         "developing-with-bigquery"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "google-cloud-storage-basics",
@@ -4830,7 +5065,8 @@
         "gcs-security-assessment",
         "google-cloud-storage-fuse"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "everyday"
     },
     {
       "id": "google-cloud-storage-bucket-architect",
@@ -4865,7 +5101,8 @@
         "google-cloud-storage-basics",
         "gcs-security-assessment"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "gcs-security-assessment",
@@ -4900,7 +5137,8 @@
         "google-cloud-storage-basics",
         "google-cloud-storage-bucket-architect"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "google-cloud-storage-fuse",
@@ -4934,7 +5172,8 @@
       "rel": [
         "google-cloud-storage-basics"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "dak-setup",
@@ -4970,7 +5209,8 @@
         "dak-cloud-mcps",
         "developing-with-bigquery"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "dak-cloud-mcps",
@@ -5008,7 +5248,8 @@
         "developing-with-bigquery",
         "mcp-cmd"
       ],
-      "inst": "מותקן ופעיל ב-mcp_config.json של data-agent-kit-plugin."
+      "inst": "מותקן ופעיל ב-mcp_config.json של data-agent-kit-plugin.",
+      "tier": "niche"
     },
     {
       "id": "bigquery-graph-suite",
@@ -5043,7 +5284,8 @@
         "developing-with-bigquery",
         "bigquery-sql"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "gcp-pipelines-dbt-dataform",
@@ -5080,7 +5322,8 @@
         "data-autocleaning",
         "gcp-airflow-composer-suite"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "gcp-spark-dataflow-bigtable",
@@ -5117,7 +5360,8 @@
         "gcp-pipelines-dbt-dataform",
         "dak-cloud-mcps"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "gcp-airflow-composer-suite",
@@ -5154,7 +5398,8 @@
         "gcp-pipelines-dbt-dataform",
         "automation"
       ],
-      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן ופעיל (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "bigquery-data-transfer-service",
@@ -5189,7 +5434,8 @@
         "developing-with-bigquery",
         "gcp-pipelines-dbt-dataform"
       ],
-      "inst": "מותקן (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "dataform-bigquery",
@@ -5224,7 +5470,8 @@
         "dbt-bigquery",
         "developing-with-bigquery"
       ],
-      "inst": "מותקן (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "dbt-bigquery",
@@ -5259,7 +5506,8 @@
         "dataform-bigquery",
         "bigquery-sql"
       ],
-      "inst": "מותקן (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "schema-mapping",
@@ -5294,7 +5542,8 @@
         "data-autocleaning",
         "gcp-pipelines-dbt-dataform"
       ],
-      "inst": "מותקן (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "google-cloud-auth-verification",
@@ -5329,7 +5578,8 @@
         "dak-setup",
         "credentials"
       ],
-      "inst": "מותקן (פלאגין data-agent-kit-plugin)."
+      "inst": "מותקן (פלאגין data-agent-kit-plugin).",
+      "tier": "niche"
     },
     {
       "id": "arxiv",
@@ -5367,7 +5617,8 @@
         "pubmed",
         "europepmc"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "pubmed",
@@ -5404,7 +5655,8 @@
         "openfda",
         "europepmc"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "openalex",
@@ -5440,7 +5692,8 @@
         "arxiv",
         "europepmc"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "europepmc",
@@ -5475,7 +5728,8 @@
         "pubmed",
         "openalex"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "biorxiv",
@@ -5510,7 +5764,8 @@
         "pubmed",
         "europepmc"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "openfda",
@@ -5547,7 +5802,8 @@
         "pubmed",
         "pubchem"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "clinical-trials",
@@ -5583,7 +5839,8 @@
         "pubmed",
         "opentargets"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "pubchem",
@@ -5618,7 +5875,8 @@
         "chembl",
         "openfda"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "chembl",
@@ -5653,7 +5911,8 @@
         "pubchem",
         "opentargets"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "opentargets",
@@ -5688,7 +5947,8 @@
         "chembl",
         "clinical-trials"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "biomolecular-viewer",
@@ -5726,7 +5986,8 @@
         "pdb",
         "pymol"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "alphafold",
@@ -5762,7 +6023,8 @@
         "uniprot",
         "pdb"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "pdb",
@@ -5798,7 +6060,8 @@
         "alphafold",
         "pymol"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "uniprot",
@@ -5834,7 +6097,8 @@
         "interpro",
         "ensembl"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "pymol",
@@ -5870,7 +6134,8 @@
         "alphafold",
         "pdb"
       ],
-      "inst": "מותקן (דורש תוכנת PyMOL מקומית לרינדור)."
+      "inst": "מותקן (דורש תוכנת PyMOL מקומית לרינדור).",
+      "tier": "niche"
     },
     {
       "id": "protein-analysis-suite",
@@ -5909,7 +6174,8 @@
         "alphafold",
         "pdb"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ancient",
@@ -5945,7 +6211,8 @@
         "arxiv",
         "openalex"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "clinvar-dbsnp-gnomad",
@@ -5981,7 +6248,8 @@
         "alphagenome-suite",
         "ensembl-gtex-ncbi"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "alphagenome-suite",
@@ -6017,7 +6285,8 @@
         "clinvar-dbsnp-gnomad",
         "ensembl-gtex-ncbi"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ensembl-gtex-ncbi",
@@ -6053,7 +6322,8 @@
         "clinvar-dbsnp-gnomad",
         "uniprot"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "encode-ucsc-jaspar-unibind",
@@ -6089,7 +6359,8 @@
         "alphagenome-suite",
         "ebi-quickgo-reactome"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ebi-quickgo-reactome",
@@ -6125,7 +6396,8 @@
         "protein-analysis-suite",
         "uniprot"
       ],
-      "inst": "מותקן ופעיל (פלאגין science)."
+      "inst": "מותקן ופעיל (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "slash-tasks",
@@ -6162,7 +6434,8 @@
         "shell-cmd",
         "schedule"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "slash-usage",
@@ -6198,7 +6471,8 @@
         "effort",
         "context"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "slash-clear",
@@ -6234,7 +6508,8 @@
         "compact",
         "resume"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "slash-copy",
@@ -6271,7 +6546,8 @@
         "btw",
         "open-cmd"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "open-cmd",
@@ -6307,7 +6583,8 @@
         "artifacts",
         "file-ops"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "codesearch-cmd",
@@ -6342,7 +6619,8 @@
         "file-ops",
         "diff"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "resume-title-cmds",
@@ -6378,7 +6656,8 @@
         "at-mentions",
         "fork"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "settings-changelog-cmds",
@@ -6417,7 +6696,8 @@
         "agy-guide",
         "hooks-permissions-cmds"
       ],
-      "inst": null
+      "inst": null,
+      "tier": "everyday"
     },
     {
       "id": "antigravity-explorer-builder",
@@ -6457,7 +6737,8 @@
         "learn",
         "gen-ui"
       ],
-      "inst": "מותקן ופעיל בתיקיית הסקילים האישית שלך (~/.gemini/antigravity/skills/antigravity-explorer-builder)."
+      "inst": "מותקן ופעיל בתיקיית הסקילים האישית שלך (~/.gemini/antigravity/skills/antigravity-explorer-builder).",
+      "tier": "everyday"
     },
     {
       "id": "foldseek",
@@ -6493,7 +6774,8 @@
         "alphafold",
         "biomolecular-viewer"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "interpro",
@@ -6528,7 +6810,8 @@
         "uniprot",
         "alphafold"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "string-db",
@@ -6563,7 +6846,8 @@
         "reactome",
         "uniprot"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "hpa",
@@ -6598,7 +6882,8 @@
         "gtex",
         "uniprot"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "msa",
@@ -6633,7 +6918,8 @@
         "seq-search",
         "uniprot"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "seq-search",
@@ -6669,7 +6955,8 @@
         "uniprot",
         "foldseek"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "clinvar",
@@ -6705,7 +6992,8 @@
         "dbsnp",
         "ag-variant"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "dbsnp",
@@ -6741,7 +7029,8 @@
         "gnomad",
         "ensembl"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "gnomad",
@@ -6777,7 +7066,8 @@
         "dbsnp",
         "ensembl"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ensembl",
@@ -6813,7 +7103,8 @@
         "dbsnp",
         "gnomad"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "gtex",
@@ -6848,7 +7139,8 @@
         "hpa",
         "ensembl"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ag-variant",
@@ -6884,7 +7176,8 @@
         "ag-links",
         "clinvar"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ag-score",
@@ -6919,7 +7212,8 @@
         "ag-variant",
         "ag-links"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ag-links",
@@ -6954,7 +7248,8 @@
         "ag-variant",
         "ag-score"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ncbi-seq",
@@ -6990,7 +7285,8 @@
         "uniprot",
         "pubmed"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "encode",
@@ -7026,7 +7322,8 @@
         "jaspar",
         "unibind"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ucsc",
@@ -7061,7 +7358,8 @@
         "encode",
         "jaspar"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "jaspar",
@@ -7097,7 +7395,8 @@
         "encode",
         "ucsc"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "unibind",
@@ -7132,7 +7431,8 @@
         "jaspar",
         "encode"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "ebi-ols",
@@ -7167,7 +7467,8 @@
         "quickgo",
         "reactome"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "quickgo",
@@ -7203,7 +7504,8 @@
         "reactome",
         "string-db"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     },
     {
       "id": "reactome",
@@ -7239,7 +7541,8 @@
         "string-db",
         "opentargets"
       ],
-      "inst": "מותקן (פלאגין science)."
+      "inst": "מותקן (פלאגין science).",
+      "tier": "niche"
     }
   ],
   "connections": [

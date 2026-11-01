@@ -36,9 +36,9 @@ function playTone(freq, type, duration){
     osc.stop(audioCtx.currentTime + duration);
   }catch(e){}
 }
-function sfxClick(){ playTone(600, 'triangle', 0.1); }
-function sfxOpen(){ playTone(440, 'sine', 0.08); setTimeout(()=>playTone(880, 'sine', 0.12), 50); }
-function sfxFav(){ playTone(523, 'sine', 0.08); setTimeout(()=>playTone(659, 'sine', 0.08), 60); setTimeout(()=>playTone(784, 'sine', 0.12), 120); }
+function sfxClick(){ playTone(600, 'triangle', 0.08); }
+function sfxOpen(){ playTone(440, 'sine', 0.07); setTimeout(()=>playTone(880, 'sine', 0.1), 50); }
+function sfxFav(){ playTone(523, 'sine', 0.07); setTimeout(()=>playTone(659, 'sine', 0.07), 60); setTimeout(()=>playTone(784, 'sine', 0.11), 120); }
 
 // TOAST NOTIFICATIONS
 let toastTimer = null;
@@ -116,8 +116,8 @@ function renderStats(){
 
   const bar = document.getElementById('statsBar');
   bar.innerHTML = `
-    <div class="stat-pill"><span class="stat-val">${items.length}</span><span class="stat-lbl">סה״כ כלים ופקודות</span></div>
-    <div class="stat-pill"><span class="stat-val">${slashCnt}</span><span class="stat-lbl">פקודות Slash</span></div>
+    <div class="stat-pill stat-total"><span class="stat-val">${items.length}</span><span class="stat-lbl">סה״כ כלים ופקודות (הקטלוג המלא)</span></div>
+    <div class="stat-pill"><span class="stat-val">${slashCnt}</span><span class="stat-lbl">פקודות Slash (/)</span></div>
     <div class="stat-pill"><span class="stat-val">${wsCnt}</span><span class="stat-lbl">Google Workspace</span></div>
     <div class="stat-pill"><span class="stat-val">${agentCnt + devCnt}</span><span class="stat-lbl">סוכנים & פיתוח</span></div>
     <div class="stat-pill"><span class="stat-val">${extraCnt}</span><span class="stat-lbl">מומלצים להתקנה</span></div>
@@ -169,35 +169,47 @@ document.getElementById('btnCloseOnboard').addEventListener('click', ()=>{
 // WIZARD
 function renderWizard(){
   const g = document.getElementById('wizardGrid');
-  g.innerHTML = DATA.wizard.map(w=>`
-    <div class="wizard-card" onclick="selectWizardGoal('${w.rec}')">
-      <div class="wizard-goal">${w.goal}</div>
-      <div class="wizard-desc">${w.desc}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-        <span class="wizard-badge">מומלץ: ${w.rec}</span>
-        <span style="font-size:0.8rem;color:var(--neon-green);">לחץ לצפייה בכלי ←</span>
-      </div>
-    </div>
-  `).join('');
-}
+  g.innerHTML = DATA.wizard.map(w=>{
+    let pills = '';
+    if(w.recList && Array.isArray(w.recList)){
+      pills = w.recList.map(r=>`<button class="wizard-rec-btn" onclick="openItemModalById('${r.id}')">${r.n}</button>`).join('');
+    } else if(w.rec){
+      const recArr = Array.isArray(w.rec) ? w.rec : w.rec.split(',');
+      pills = recArr.map(id=>`<button class="wizard-rec-btn" onclick="openItemModalById('${id.trim()}')">${id.trim()}</button>`).join('');
+    }
 
-function selectWizardGoal(toolId){
-  const it = DATA.items.find(i=>i.id===toolId || i.en.includes(toolId) || i.n.includes(toolId));
-  if(it) openItemModal(it);
-  else showToast('הכלי המומלץ: ' + toolId);
+    return `
+      <div class="wizard-card">
+        <div class="wizard-goal">${w.goal}</div>
+        <div class="wizard-desc">${w.desc}</div>
+        ${w.advice ? `<div class="wizard-advice">💡 ${w.advice}</div>` : ''}
+        <div style="font-size:0.8rem;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;">כלים מומלצים למשימה זו (לחץ לפתיחה):</div>
+        <div class="wizard-rec-pills">${pills}</div>
+      </div>
+    `;
+  }).join('');
 }
 
 // RECIPES
 function renderRecipes(){
   const g = document.getElementById('recipesGrid');
-  g.innerHTML = DATA.recipes.map(r=>`
-    <div class="wizard-card" onclick="openRecipePrompt('${r.id}')">
-      <div class="wizard-goal">⚡ ${r.title}</div>
-      <div class="wizard-desc">${r.desc}</div>
-      <div style="font-size:0.8rem;color:var(--neon-cyan);margin-bottom:8px;line-height:1.4;">שלבים: ${r.steps.join(' ➔ ')}</div>
-      <button class="prompt-copy-btn" onclick="event.stopPropagation();openRecipePrompt('${r.id}')">📋 העתק פרומפט מלא לתהליך</button>
-    </div>
-  `).join('');
+  g.innerHTML = DATA.recipes.map(r=>{
+    const stepPills = (r.steps || []).map(s=>`
+      <button class="wizard-rec-btn" onclick="openItemModalById('${s}')">${s}</button>
+    `).join(' <span style="color:var(--text-muted);font-size:0.75rem;">➔</span> ');
+
+    return `
+      <div class="wizard-card">
+        <div class="wizard-goal">⚡ ${r.title}</div>
+        <div class="wizard-desc">${r.desc}</div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;">שרשרת הכלים בתהליך:</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">${stepPills}</div>
+        </div>
+        <button class="prompt-copy-btn" onclick="openRecipePrompt('${r.id}')">📋 העתק פרומפט מלא לתהליך זה</button>
+      </div>
+    `;
+  }).join('');
 }
 
 function openRecipePrompt(rId){
@@ -294,7 +306,7 @@ function renderCards(){
 
   // View Mode filter
   if(viewMode === 'everyday' && activeCat === 'all' && !searchQ){
-    filtered = filtered.filter(i => i.tier === 'everyday' || i.c === 'slash' || i.c === 'workspace' || i.c === 'agents' || i.c === 'dev' || i.c === 'extra');
+    filtered = filtered.filter(i => i.tier === 'everyday');
   }
 
   // Category filter
@@ -335,7 +347,7 @@ function renderCards(){
 
   if(!filtered.length){
     g.innerHTML = favsActionBar + `
-      <div style="grid-column:1/-1;text-align:center;padding:40px 16px;color:var(--text-secondary);">
+      <div style="grid-column:1/-1;text-align:center;padding:45px 16px;color:var(--text-secondary);">
         <div style="font-size:2.8rem;margin-bottom:12px;">🔍</div>
         <div style="font-size:1.15rem;font-weight:700;color:var(--text-primary);">לא נמצאו כלים תואמים</div>
         <p style="margin-top:6px;font-size:0.9rem;">נסה לחפש מילה אחרת, לנקות את החיפוש או לעבור לתצוגת "קטלוג מלא"</p>
@@ -420,8 +432,10 @@ function copyAllFavsPrompt(){
 }
 
 function openItemModalById(id){
-  const it = DATA.items.find(i=>i.id===id);
+  const cleanId = id.trim();
+  const it = DATA.items.find(i=>i.id===cleanId || i.en===cleanId || i.id.toLowerCase()===cleanId.toLowerCase() || i.en.toLowerCase()===cleanId.toLowerCase());
   if(it) openItemModal(it);
+  else showToast('הכלי המבוקש: ' + cleanId);
 }
 
 // MODAL CONTROLS
@@ -441,7 +455,7 @@ function openItemModal(it){
   document.getElementById('itemModal').style.setProperty('--modal-accent', accent);
   document.getElementById('mEmoji').textContent = it.e;
   document.getElementById('mTitle').textContent = it.n;
-  document.getElementById('mEn').textContent = it.en + (it.u ? ' | שימוש: ' + it.u : '');
+  document.getElementById('mEnText').textContent = it.en + (it.u ? ' | שימוש: ' + it.u : '');
   
   // Overview Tab
   document.getElementById('mSimple').textContent = it.simple;
@@ -537,17 +551,13 @@ function switchModalTab(tabId){
   document.querySelectorAll('.modal-nav .modal-tab-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.modal-body-section').forEach(sec => sec.classList.remove('active'));
   
-  if(window.event && window.event.target && window.event.target.classList && window.event.target.classList.contains('modal-tab-btn')) {
-    window.event.target.classList.add('active');
-  } else {
-    // Select matching button
-    const btns = document.querySelectorAll('.modal-nav .modal-tab-btn');
-    if(tabId === 'tabOverview' && btns[0]) btns[0].classList.add('active');
-    else if(tabId === 'tabPrompts' && btns[1]) btns[1].classList.add('active');
-    else if(tabId === 'tabSteps' && btns[2]) btns[2].classList.add('active');
-    else if(tabId === 'tabTips' && btns[3]) btns[3].classList.add('active');
-    else if(tabId === 'tabInstall' && btns[4]) btns[4].classList.add('active');
-  }
+  const btns = document.querySelectorAll('.modal-nav .modal-tab-btn');
+  if(tabId === 'tabOverview' && btns[0]) btns[0].classList.add('active');
+  else if(tabId === 'tabPrompts' && btns[1]) btns[1].classList.add('active');
+  else if(tabId === 'tabSteps' && btns[2]) btns[2].classList.add('active');
+  else if(tabId === 'tabTips' && btns[3]) btns[3].classList.add('active');
+  else if(tabId === 'tabInstall' && btns[4]) btns[4].classList.add('active');
+
   const targetSection = document.getElementById(tabId);
   if(targetSection) targetSection.classList.add('active');
   sfxClick();
@@ -684,33 +694,33 @@ function openCompareModal(){
   }
 
   wrap.innerHTML = `
-    <table style="width:100%;border-collapse:collapse;color:var(--text-primary);text-align:right;min-width:500px;">
+    <table style="width:100%;border-collapse:collapse;color:var(--text-primary);text-align:right;min-width:550px;">
       <thead>
         <tr style="border-bottom:2px solid var(--neon-cyan);">
-          <th style="padding:10px 12px;background:rgba(0,240,255,0.06);">מאפיין</th>
-          ${items.map(it => `<th style="padding:10px 12px;color:var(--neon-cyan);font-size:1.05rem;">${it.e} ${it.n}</th>`).join('')}
+          <th style="padding:12px;background:rgba(0,240,255,0.06);">מאפיין</th>
+          ${items.map(it => `<th style="padding:12px;color:var(--neon-cyan);font-size:1.05rem;">${it.e} ${it.n}</th>`).join('')}
         </tr>
       </thead>
       <tbody>
         <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-          <td style="padding:10px 12px;font-weight:700;color:var(--neon-gold);white-space:nowrap;">🎯 במילים פשוטות</td>
-          ${items.map(it => `<td style="padding:10px 12px;line-height:1.5;">${it.simple}</td>`).join('')}
+          <td style="padding:12px;font-weight:700;color:var(--neon-gold);white-space:nowrap;">🎯 במילים פשוטות</td>
+          ${items.map(it => `<td style="padding:12px;line-height:1.5;">${it.simple}</td>`).join('')}
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-          <td style="padding:10px 12px;font-weight:700;color:var(--neon-cyan);white-space:nowrap;">⚡ מזהה טכני</td>
-          ${items.map(it => `<td style="padding:10px 12px;font-family:var(--font-mono);font-size:0.82rem;direction:ltr;text-align:right;">${it.en}</td>`).join('')}
+          <td style="padding:12px;font-weight:700;color:var(--neon-cyan);white-space:nowrap;">⚡ מזהה טכני</td>
+          ${items.map(it => `<td style="padding:12px;font-family:var(--font-mono);font-size:0.82rem;direction:ltr;text-align:right;"><bdi>${it.en}</bdi></td>`).join('')}
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-          <td style="padding:10px 12px;font-weight:700;color:var(--neon-green);white-space:nowrap;">💪 יכולות מרכזיות</td>
-          ${items.map(it => `<td style="padding:10px 12px;font-size:0.88rem;">${(it.caps || []).slice(0,5).join(', ')}</td>`).join('')}
+          <td style="padding:12px;font-weight:700;color:var(--neon-green);white-space:nowrap;">💪 יכולות מרכזיות</td>
+          ${items.map(it => `<td style="padding:12px;font-size:0.88rem;">${(it.caps || []).slice(0,5).join(', ')}</td>`).join('')}
         </tr>
         <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-          <td style="padding:10px 12px;font-weight:700;color:var(--neon-purple);white-space:nowrap;">💬 דוגמת פרומפט</td>
-          ${items.map(it => `<td style="padding:10px 12px;font-size:0.85rem;line-height:1.4;">${(it.prompts && it.prompts[0]) || ''}</td>`).join('')}
+          <td style="padding:12px;font-weight:700;color:var(--neon-purple);white-space:nowrap;">💬 דוגמת פרומפט</td>
+          ${items.map(it => `<td style="padding:12px;font-size:0.85rem;line-height:1.4;">${(it.prompts && it.prompts[0]) || ''}</td>`).join('')}
         </tr>
         <tr>
-          <td style="padding:10px 12px;font-weight:700;color:var(--neon-blue);white-space:nowrap;">📦 פעולה</td>
-          ${items.map(it => `<td style="padding:10px 12px;"><button class="control-btn active" style="font-size:0.78rem;padding:5px 10px;" onclick="closeCompareModal();openItemModalById('${it.id}')">פתח כרטיס מלא</button></td>`).join('')}
+          <td style="padding:12px;font-weight:700;color:var(--neon-blue);white-space:nowrap;">📦 פעולה</td>
+          ${items.map(it => `<td style="padding:12px;"><button class="control-btn active" style="font-size:0.78rem;padding:6px 12px;" onclick="closeCompareModal();openItemModalById('${it.id}')">פתח כרטיס מלא</button></td>`).join('')}
         </tr>
       </tbody>
     </table>
@@ -853,8 +863,12 @@ function checkInitialHash(){
     if(it){
       setTimeout(()=>openItemModal(it), 200);
     }
+  } else if(!hash && document.getElementById('itemModal').classList.contains('active')){
+    closeItemModal();
   }
 }
+
+window.addEventListener('hashchange', checkInitialHash);
 
 // INIT
 window.addEventListener('DOMContentLoaded', ()=>{

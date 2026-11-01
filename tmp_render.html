@@ -1,0 +1,12 @@
+<!DOCTYPE html><html><body style="margin:0;padding:0;background:#05070f;">
+        <iframe id="ifr" src="index.html" style="border:none;width:1440px;height:900px;"></iframe>
+        <script>
+        window.onload = () => {
+            setTimeout(() => {
+                try {
+                    const ifr = document.getElementById('ifr');
+                    ifr.contentDocument.getElementById('cardsGrid').scrollIntoView();
+                }catch(e){}
+            }, 1200);
+        };
+        </script></body></html>

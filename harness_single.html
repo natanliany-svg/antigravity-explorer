@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#000;">
+<iframe id="ifr" src="index.html" style="border:none;margin:0;padding:0;display:block;width:1440px;height:900px;"></iframe>
+<div id="output"></div>
+<script>
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const ifr = document.getElementById('ifr');
+        const doc = ifr.contentDocument;
+        const scrollW = doc.documentElement.scrollWidth;
+        const clientW = doc.documentElement.clientWidth;
+        const bodyW = doc.body.scrollWidth;
+        const overflowing = [];
+        
+        doc.querySelectorAll('*').forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.right > 1440 + 1 || r.left < -1) {
+                overflowing.push({
+                    tag: el.tagName,
+                    id: el.id,
+                    cls: (el.className || '').toString().slice(0, 35),
+                    w: Math.round(r.width),
+                    l: Math.round(r.left),
+                    r: Math.round(r.right),
+                    txt: (el.innerText || '').slice(0, 25).trim().replace(/[\n\r]+/g, ' ')
+                });
+            }
+        });
+        
+        const res = {
+            width: 1440,
+            height: 900,
+            scrollW: scrollW,
+            clientW: clientW,
+            bodyW: bodyW,
+            overflowCount: overflowing.length,
+            overflowing: overflowing.slice(0, 15)
+        };
+        const prefix = '___DATA' + '_PAYLOAD___';
+        const suffix = '___END' + '_PAYLOAD___';
+        document.getElementById('output').textContent = prefix + JSON.stringify(res) + suffix;
+    }, 1500);
+});
+</script>
+</body>
+</html>

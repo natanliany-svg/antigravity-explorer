@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#000;">
+<iframe id="ifr" src="index.html" style="border:none;margin:0;padding:0;display:block;"></iframe>
+<div id="output"></div>
+<script>
+async function run() {
+    const ifr = document.getElementById('ifr');
+    const out = document.getElementById('output');
+    const sizes = [
+        [320, 568],
+        [360, 640],
+        [375, 812],
+        [414, 896],
+        [768, 1024],
+        [1024, 768],
+        [1440, 900]
+    ];
+    const results = {};
+    for (const [w, h] of sizes) {
+        ifr.style.width = w + 'px';
+        ifr.style.height = h + 'px';
+        await new Promise(r => setTimeout(r, 600));
+        
+        const doc = ifr.contentDocument;
+        const scrollW = doc.documentElement.scrollWidth;
+        const bodyW = doc.body.scrollWidth;
+        const overflowing = [];
+        
+        doc.querySelectorAll('*').forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.right > w + 1 || r.left < -1) {
+                overflowing.push({
+                    tag: el.tagName,
+                    id: el.id,
+                    cls: (el.className || '').toString().slice(0, 35),
+                    w: Math.round(r.width),
+                    l: Math.round(r.left),
+                    r: Math.round(r.right)
+                });
+            }
+        });
+        
+        results[w] = {
+            width: w,
+            scrollW: scrollW,
+            bodyW: bodyW,
+            overflowCount: overflowing.length,
+            overflowing: overflowing.slice(0, 15)
+        };
+    }
+    out.textContent = '___RESULT_START___' + JSON.stringify(results) + '___RESULT_END___';
+}
+window.onload = () => setTimeout(run, 500);
+</script>
+</body>
+</html>

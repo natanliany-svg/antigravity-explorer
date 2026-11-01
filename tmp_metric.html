@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><body>
+<iframe id="ifr" src="index.html" style="border:none;"></iframe>
+<div id="res"></div>
+<script>
+async function test() {
+    const ifr = document.getElementById('ifr');
+    const out = {};
+    for (const w of [320, 375, 414, 768, 1024, 1440]) {
+        ifr.style.width = w + 'px';
+        ifr.style.height = '800px';
+        await new Promise(r => setTimeout(r, 400));
+        const doc = ifr.contentDocument;
+        const scrollW = doc.documentElement.scrollWidth;
+        const clientW = doc.documentElement.clientWidth;
+        const bad = [];
+        doc.querySelectorAll('*').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.right > w + 1 || rect.left < -1) {
+                bad.push({tag: el.tagName, cls: el.className, w: rect.width, r: rect.right});
+            }
+        });
+        out[w] = {scrollW: scrollW, clientW: clientW, overflows: scrollW > w, badCount: bad.length};
+    }
+    document.getElementById('res').textContent = 'PAYLOAD_START' + JSON.stringify(out) + 'PAYLOAD_END';
+}
+window.onload = () => setTimeout(test, 500);
+</script></body></html>
