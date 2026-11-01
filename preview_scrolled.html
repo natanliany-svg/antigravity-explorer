@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:20px;background:#020510;display:flex;justify-content:center;">
+<iframe id="ifr" src="index.html" style="width:375px;height:812px;border:2px solid #00f0ff;border-radius:24px;overflow:hidden;box-shadow:0 0 30px rgba(0,240,255,0.4);"></iframe>
+<script>
+window.addEventListener('load', () => {
+  const ifr = document.getElementById('ifr');
+  setTimeout(() => {
+    ifr.contentWindow.scrollTo(0, 580);
+  }, 1000);
+});
+</script>
+</body>
+</html>

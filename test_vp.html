@@ -1,0 +1,16 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head>
+<body>
+<div id='res'></div>
+<script>
+document.getElementById('res').textContent = JSON.stringify({
+  innerW: window.innerWidth,
+  clientW: document.documentElement.clientWidth,
+  media768: window.matchMedia('(max-width: 768px)').matches,
+  media480: window.matchMedia('(max-width: 480px)').matches
+});
+</script>
+</body>
+</html>

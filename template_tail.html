@@ -1,0 +1,873 @@
+// STATE & STORAGE
+let activeCat = 'all';
+let viewMode = 'everyday'; // 'everyday' or 'all'
+let searchQ = '';
+let compareList = [];
+let favs = JSON.parse(localStorage.getItem('agy_favs_v3') || '[]');
+let currentModalItem = null;
+let soundEnabled = localStorage.getItem('agy_sound_v3') !== 'false';
+let currentTheme = localStorage.getItem('agy_theme_v3') || 'neon';
+
+// APPLY SAVED THEME
+if(currentTheme !== 'neon'){
+  document.body.setAttribute('data-theme', currentTheme);
+}
+
+// PERMANENT BASE URL FOR SHARING
+const BASE_SHARE_URL = 'https://natanliany-svg.github.io/antigravity-explorer/';
+
+// SOUND SYSTEM (Web Audio Synth)
+const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+function playTone(freq, type, duration){
+  if(!soundEnabled) return;
+  try{
+    if(!audioCtx) audioCtx = new AudioContextClass();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }catch(e){}
+}
+function sfxClick(){ playTone(600, 'triangle', 0.1); }
+function sfxOpen(){ playTone(440, 'sine', 0.08); setTimeout(()=>playTone(880, 'sine', 0.12), 50); }
+function sfxFav(){ playTone(523, 'sine', 0.08); setTimeout(()=>playTone(659, 'sine', 0.08), 60); setTimeout(()=>playTone(784, 'sine', 0.12), 120); }
+
+// TOAST NOTIFICATIONS
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toastMsg');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('active');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('active'), 2800);
+}
+
+// THEMES CYCLER
+const themes = ['neon', 'matrix', 'synthwave'];
+document.getElementById('btnThemeToggle').addEventListener('click', ()=>{
+  let idx = themes.indexOf(currentTheme);
+  idx = (idx + 1) % themes.length;
+  currentTheme = themes[idx];
+  localStorage.setItem('agy_theme_v3', currentTheme);
+  if(currentTheme === 'neon') document.body.removeAttribute('data-theme');
+  else document.body.setAttribute('data-theme', currentTheme);
+  showToast('הוחלף עיצוב לתאורת: ' + currentTheme.toUpperCase());
+  sfxClick();
+});
+
+// SOUND TOGGLE
+const soundBtn = document.getElementById('btnSoundToggle');
+soundBtn.textContent = soundEnabled ? '🔊 צלילים: פעיל' : '🔇 צלילים: כבוי';
+soundBtn.addEventListener('click', ()=>{
+  soundEnabled = !soundEnabled;
+  localStorage.setItem('agy_sound_v3', soundEnabled ? 'true' : 'false');
+  soundBtn.textContent = soundEnabled ? '🔊 צלילים: פעיל' : '🔇 צלילים: כבוי';
+  showToast(soundEnabled ? 'צלילים הופעלו' : 'צלילים הושתקו');
+  if(soundEnabled) sfxFav();
+});
+
+// BACK TO TOP
+const btnBackToTop = document.getElementById('btnBackToTop');
+window.addEventListener('scroll', ()=>{
+  if(window.scrollY > 350) btnBackToTop.classList.add('visible');
+  else btnBackToTop.classList.remove('visible');
+}, {passive: true});
+btnBackToTop.addEventListener('click', ()=>{
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  sfxClick();
+});
+
+// KEYBOARD SHORTCUTS
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    closeItemModal();
+    closeCompareModal();
+    ['wizardPanel','recipesPanel','graphPanel'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.classList.remove('active');
+    });
+  } else if(e.key === '/' && document.activeElement !== document.getElementById('searchInput')){
+    e.preventDefault();
+    const inp = document.getElementById('searchInput');
+    inp.focus();
+    inp.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+});
+
+// STATS BAR
+function renderStats(){
+  const items = DATA.items;
+  const slashCnt = items.filter(i=>i.c==='slash').length;
+  const agentCnt = items.filter(i=>i.c==='agents').length;
+  const wsCnt = items.filter(i=>i.c==='workspace').length;
+  const devCnt = items.filter(i=>i.c==='dev').length;
+  const extraCnt = items.filter(i=>i.c==='extra').length;
+  const cloudCnt = items.filter(i=>i.c==='cloud').length;
+  const scienceCnt = items.filter(i=>['lit','chem','protein','genomics'].includes(i.c)).length;
+
+  const bar = document.getElementById('statsBar');
+  bar.innerHTML = `
+    <div class="stat-pill"><span class="stat-val">${items.length}</span><span class="stat-lbl">סה״כ כלים ופקודות</span></div>
+    <div class="stat-pill"><span class="stat-val">${slashCnt}</span><span class="stat-lbl">פקודות Slash</span></div>
+    <div class="stat-pill"><span class="stat-val">${wsCnt}</span><span class="stat-lbl">Google Workspace</span></div>
+    <div class="stat-pill"><span class="stat-val">${agentCnt + devCnt}</span><span class="stat-lbl">סוכנים & פיתוח</span></div>
+    <div class="stat-pill"><span class="stat-val">${extraCnt}</span><span class="stat-lbl">מומלצים להתקנה</span></div>
+    <div class="stat-pill"><span class="stat-val">${cloudCnt}</span><span class="stat-lbl">Cloud & Data</span></div>
+    <div class="stat-pill"><span class="stat-val">${scienceCnt}</span><span class="stat-lbl">מדע & גנומיקה</span></div>
+  `;
+}
+
+// ONBOARDING
+function renderOnboarding(){
+  const g = document.getElementById('onboardingGrid');
+  g.innerHTML = DATA.onboarding.map(o=>`
+    <div class="onboard-card">
+      <div>
+        <div class="onboard-top">
+          <span class="onboard-icon">${o.emoji}</span>
+          <div>
+            <div class="onboard-name">${o.title}</div>
+            <div class="onboard-badges">
+              <span class="onboard-badge-en" dir="ltr">${o.en || ''}</span>
+              <span class="onboard-badge-ph">${o.phonetic}</span>
+            </div>
+          </div>
+        </div>
+        <div class="onboard-analogy">💡 ${o.analogy}</div>
+      </div>
+      <div class="onboard-tip">⚡ ${o.tip}</div>
+    </div>
+  `).join('');
+
+  if(localStorage.getItem('agy_onboard_hidden') === 'true'){
+    document.getElementById('onboardingSec').style.display = 'none';
+  }
+}
+
+document.getElementById('btnOnboardToggle').addEventListener('click', ()=>{
+  const sec = document.getElementById('onboardingSec');
+  const isHidden = (sec.style.display === 'none');
+  sec.style.display = isHidden ? 'block' : 'none';
+  localStorage.setItem('agy_onboard_hidden', isHidden ? 'false' : 'true');
+  sfxClick();
+});
+document.getElementById('btnCloseOnboard').addEventListener('click', ()=>{
+  document.getElementById('onboardingSec').style.display = 'none';
+  localStorage.setItem('agy_onboard_hidden', 'true');
+  sfxClick();
+});
+
+// WIZARD
+function renderWizard(){
+  const g = document.getElementById('wizardGrid');
+  g.innerHTML = DATA.wizard.map(w=>`
+    <div class="wizard-card" onclick="selectWizardGoal('${w.rec}')">
+      <div class="wizard-goal">${w.goal}</div>
+      <div class="wizard-desc">${w.desc}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+        <span class="wizard-badge">מומלץ: ${w.rec}</span>
+        <span style="font-size:0.8rem;color:var(--neon-green);">לחץ לצפייה בכלי ←</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectWizardGoal(toolId){
+  const it = DATA.items.find(i=>i.id===toolId || i.en.includes(toolId) || i.n.includes(toolId));
+  if(it) openItemModal(it);
+  else showToast('הכלי המומלץ: ' + toolId);
+}
+
+// RECIPES
+function renderRecipes(){
+  const g = document.getElementById('recipesGrid');
+  g.innerHTML = DATA.recipes.map(r=>`
+    <div class="wizard-card" onclick="openRecipePrompt('${r.id}')">
+      <div class="wizard-goal">⚡ ${r.title}</div>
+      <div class="wizard-desc">${r.desc}</div>
+      <div style="font-size:0.8rem;color:var(--neon-cyan);margin-bottom:8px;line-height:1.4;">שלבים: ${r.steps.join(' ➔ ')}</div>
+      <button class="prompt-copy-btn" onclick="event.stopPropagation();openRecipePrompt('${r.id}')">📋 העתק פרומפט מלא לתהליך</button>
+    </div>
+  `).join('');
+}
+
+function openRecipePrompt(rId){
+  const r = DATA.recipes.find(x=>x.id===rId);
+  if(!r) return;
+  navigator.clipboard.writeText(r.prompt);
+  showToast('הפרומפט המלא לתהליך הועתק ללוח!');
+  sfxFav();
+}
+
+function togglePanel(panelId){
+  const p = document.getElementById(panelId);
+  p.classList.toggle('active');
+  sfxClick();
+}
+document.getElementById('btnWizardToggle').addEventListener('click', ()=>togglePanel('wizardPanel'));
+document.getElementById('btnRecipesToggle').addEventListener('click', ()=>togglePanel('recipesPanel'));
+document.getElementById('btnGraphToggle').addEventListener('click', ()=>{
+  togglePanel('graphPanel');
+  if(document.getElementById('graphPanel').classList.contains('active')){
+    setTimeout(renderRelationshipGraph, 100);
+  }
+});
+
+// CATEGORIES TABS
+function renderCategoryTabs(){
+  const t = document.getElementById('catTabs');
+  t.innerHTML = DATA.categories.map(c=>{
+    let count = 0;
+    if(c.id === 'all') count = DATA.items.length;
+    else if(c.id === 'favs') count = favs.length;
+    else count = DATA.items.filter(i=>i.c===c.id).length;
+
+    const isActive = activeCat === c.id ? 'active' : '';
+    return `<button class="cat-tab ${isActive}" onclick="setCategory('${c.id}')">
+      <span>${c.name}</span>
+      <span class="cat-count">${count}</span>
+    </button>`;
+  }).join('');
+}
+
+function setCategory(cid){
+  activeCat = cid;
+  renderCategoryTabs();
+  renderCards();
+  sfxClick();
+}
+
+function setViewMode(mode){
+  viewMode = mode;
+  document.getElementById('vtEveryday').classList.toggle('active', mode==='everyday');
+  document.getElementById('vtAll').classList.toggle('active', mode==='all');
+  renderCards();
+  sfxClick();
+}
+
+// SEARCH & HIGHLIGHTING
+const searchInput = document.getElementById('searchInput');
+const searchClearBtn = document.getElementById('searchClearBtn');
+
+searchInput.addEventListener('input', (e)=>{
+  searchQ = e.target.value.toLowerCase().trim();
+  searchClearBtn.classList.toggle('active', !!searchQ);
+  renderCards();
+});
+
+searchClearBtn.addEventListener('click', ()=>{
+  searchInput.value = '';
+  searchQ = '';
+  searchClearBtn.classList.remove('active');
+  searchInput.focus();
+  renderCards();
+  sfxClick();
+});
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightMatch(text, query){
+  if(!query || !text) return text || '';
+  try{
+    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+    return String(text).replace(regex, '<mark class="highlight">$1</mark>');
+  }catch(e){
+    return text || '';
+  }
+}
+
+// RENDER CARDS
+function renderCards(){
+  const g = document.getElementById('cardsGrid');
+  let filtered = DATA.items;
+
+  // View Mode filter
+  if(viewMode === 'everyday' && activeCat === 'all' && !searchQ){
+    filtered = filtered.filter(i => i.tier === 'everyday' || i.c === 'slash' || i.c === 'workspace' || i.c === 'agents' || i.c === 'dev' || i.c === 'extra');
+  }
+
+  // Category filter
+  if(activeCat === 'favs'){
+    filtered = filtered.filter(i => favs.includes(i.id));
+  } else if(activeCat !== 'all'){
+    filtered = filtered.filter(i => i.c === activeCat);
+  }
+
+  // Search filter
+  if(searchQ){
+    filtered = filtered.filter(it => {
+      const q = searchQ;
+      const matchN = (it.n || '').toLowerCase().includes(q);
+      const matchEn = (it.en || '').toLowerCase().includes(q);
+      const matchDesc = (it.desc || '').toLowerCase().includes(q);
+      const matchSimple = (it.simple || '').toLowerCase().includes(q);
+      const matchCaps = (it.caps || []).some(c => c.toLowerCase().includes(q));
+      const matchTips = (it.tips || []).some(t => t.toLowerCase().includes(q));
+      const matchPrompts = (it.prompts || []).some(p => p.toLowerCase().includes(q));
+      return matchN || matchEn || matchDesc || matchSimple || matchCaps || matchTips || matchPrompts;
+    });
+  }
+
+  // FAVORITES PROMPT ACTION BAR IF IN FAVS
+  let favsActionBar = '';
+  if(activeCat === 'favs' && favs.length > 0){
+    favsActionBar = `
+      <div style="grid-column:1/-1;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);padding:14px 18px;border-radius:var(--radius-md);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+        <div>
+          <span style="color:var(--neon-gold);font-weight:700;">⭐ שמורים אצלך ${favs.length} כלים מועדפים</span>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:2px;">ניתן להעתיק את כל הכלים המועדפים שלך כפרומפט הנחיה מרוכז ל-Antigravity בלחיצה אחת:</p>
+        </div>
+        <button class="control-btn active" onclick="copyAllFavsPrompt()">📋 העתק מועדפים כפרומפט ל-AI</button>
+      </div>
+    `;
+  }
+
+  if(!filtered.length){
+    g.innerHTML = favsActionBar + `
+      <div style="grid-column:1/-1;text-align:center;padding:40px 16px;color:var(--text-secondary);">
+        <div style="font-size:2.8rem;margin-bottom:12px;">🔍</div>
+        <div style="font-size:1.15rem;font-weight:700;color:var(--text-primary);">לא נמצאו כלים תואמים</div>
+        <p style="margin-top:6px;font-size:0.9rem;">נסה לחפש מילה אחרת, לנקות את החיפוש או לעבור לתצוגת "קטלוג מלא"</p>
+        <button class="control-btn" style="margin-top:14px;" onclick="resetSearch()">נקה סינונים והצג הכל</button>
+      </div>`;
+    return;
+  }
+
+  const catColorMap = {};
+  DATA.categories.forEach(c => { catColorMap[c.id] = c.color; });
+
+  g.innerHTML = favsActionBar + filtered.map(it => {
+    const isFav = favs.includes(it.id);
+    const isComparing = compareList.includes(it.id);
+    const accent = catColorMap[it.c] || 'var(--neon-cyan)';
+    const tierLbl = it.tier === 'everyday' ? '🌟 יומיומי' : '🔬 ממוקד';
+    const tierClass = it.tier === 'everyday' ? 'tier-everyday' : 'tier-niche';
+
+    const displayTitle = searchQ ? highlightMatch(it.n, searchQ) : it.n;
+    const displayEn = searchQ ? highlightMatch(it.en, searchQ) : it.en;
+    const displaySimple = searchQ ? highlightMatch(it.simple, searchQ) : it.simple;
+
+    return `
+      <div class="item-card" style="--card-accent:${accent};" onclick="openItemModalById('${it.id}')">
+        <div>
+          <div class="card-top">
+            <div class="card-identity">
+              <span class="card-emoji">${it.e}</span>
+              <div class="card-names">
+                <div class="card-title">${displayTitle}</div>
+                <div class="card-en" dir="ltr"><bdi>${displayEn}</bdi></div>
+              </div>
+            </div>
+            <div class="card-actions-quick" onclick="event.stopPropagation()">
+              <button class="fav-btn ${isFav?'active':''}" title="הוסף למועדפים" onclick="toggleFav('${it.id}')">★</button>
+            </div>
+          </div>
+
+          <div class="card-simple">${displaySimple}</div>
+          
+          <div class="card-caps">
+            ${(it.caps || []).slice(0, 4).map(c => `<span class="cap-pill">${searchQ ? highlightMatch(c, searchQ) : c}</span>`).join('')}
+            ${(it.caps && it.caps.length > 4) ? `<span class="cap-pill">+${it.caps.length - 4}</span>` : ''}
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-tier ${tierClass}">${tierLbl}</span>
+          <div class="card-footer-actions" onclick="event.stopPropagation()">
+            <button class="card-btn-cmp ${isComparing ? 'active' : ''}" onclick="toggleCompareFromCard('${it.id}')" title="הוסף להשוואה">
+              ${isComparing ? '✓ בהשוואה' : '+ השווה'}
+            </button>
+            <button class="card-btn-more" onclick="openItemModalById('${it.id}')">פרטים ➔</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetSearch(){
+  searchInput.value = '';
+  searchQ = '';
+  searchClearBtn.classList.remove('active');
+  activeCat = 'all';
+  viewMode = 'all';
+  document.getElementById('vtEveryday').classList.remove('active');
+  document.getElementById('vtAll').classList.add('active');
+  renderCategoryTabs();
+  renderCards();
+  sfxClick();
+}
+
+function copyAllFavsPrompt(){
+  const favItems = DATA.items.filter(i => favs.includes(i.id));
+  if(!favItems.length) return;
+  const listText = favItems.map((it, idx) => `${idx+1}. **${it.n}** (${it.en}): ${it.simple}`).join('\n');
+  const fullPrompt = `אני משתמש בכלים ובסוכנים הבאים של Google Antigravity כמערך המועדף עלי:\n${listText}\n\nבבקשה עזור לי לתאם ולשלב ביניהם במשימה הבאה: `;
+  navigator.clipboard.writeText(fullPrompt);
+  showToast('כל הכלים המועדפים הועתקו כפרומפט מרוכז ללוח!');
+  sfxFav();
+}
+
+function openItemModalById(id){
+  const it = DATA.items.find(i=>i.id===id);
+  if(it) openItemModal(it);
+}
+
+// MODAL CONTROLS
+function openItemModal(it){
+  currentModalItem = it;
+  sfxOpen();
+
+  // Update hash for deep link
+  try {
+    history.replaceState(null, '', '#tool-' + it.id);
+  } catch(e){}
+
+  const catColorMap = {};
+  DATA.categories.forEach(c => { catColorMap[c.id] = c.color; });
+  const accent = catColorMap[it.c] || 'var(--neon-cyan)';
+
+  document.getElementById('itemModal').style.setProperty('--modal-accent', accent);
+  document.getElementById('mEmoji').textContent = it.e;
+  document.getElementById('mTitle').textContent = it.n;
+  document.getElementById('mEn').textContent = it.en + (it.u ? ' | שימוש: ' + it.u : '');
+  
+  // Overview Tab
+  document.getElementById('mSimple').textContent = it.simple;
+  document.getElementById('mDesc').textContent = it.desc;
+  document.getElementById('mCaps').innerHTML = (it.caps || []).map(c => `<span class="cap-pill" style="background:rgba(0,240,255,0.1);color:var(--neon-cyan);border:1px solid rgba(0,240,255,0.25);">${c}</span>`).join('');
+  
+  if(it.when && it.when.length){
+    document.getElementById('mWhenBox').style.display = 'block';
+    document.getElementById('mWhen').innerHTML = it.when.map(w => `• ${w}`).join('<br>');
+  } else {
+    document.getElementById('mWhenBox').style.display = 'none';
+  }
+
+  if(it.terms && it.terms.length){
+    document.getElementById('mTermsBox').style.display = 'block';
+    document.getElementById('mTerms').innerHTML = it.terms.map(t => {
+      if(typeof t === 'string'){
+        const colonIdx = t.indexOf(':');
+        if(colonIdx > -1){
+          const termName = t.substring(0, colonIdx).trim();
+          const termDesc = t.substring(colonIdx + 1).trim();
+          return `<div style="margin-bottom:6px;"><strong style="color:var(--neon-cyan);">${termName}:</strong> ${termDesc}</div>`;
+        }
+        return `<div style="margin-bottom:6px;">• ${t}</div>`;
+      } else if(t && t.term){
+        return `<div style="margin-bottom:6px;"><strong style="color:var(--neon-cyan);">${t.term}:</strong> ${t.meaning || ''}</div>`;
+      }
+      return '';
+    }).join('');
+  } else {
+    document.getElementById('mTermsBox').style.display = 'none';
+  }
+
+  // Prompts Tab
+  const pList = document.getElementById('mPromptsList');
+  pList.innerHTML = (it.prompts || []).map((p, idx) => `
+    <div class="prompt-box">
+      <div class="prompt-text">${p}</div>
+      <button class="prompt-copy-btn" id="pBtn_${idx}" onclick="copyPromptText('${p.replace(/'/g, "\\'")}', 'pBtn_${idx}')">📋 העתק פרומפט זה</button>
+    </div>
+  `).join('') || '<p style="color:var(--text-secondary);">אין פרומפטים מוגדרים</p>';
+
+  // Steps Tab
+  const sList = document.getElementById('mStepsList');
+  sList.innerHTML = (it.steps || []).map((s, idx) => `
+    <div class="step-item">
+      <div class="step-num">${idx+1}</div>
+      <div class="step-text">${s}</div>
+    </div>
+  `).join('') || '<p style="color:var(--text-secondary);">אין שלבי שימוש מוגדרים</p>';
+
+  // Tips Tab
+  const tList = document.getElementById('mTipsList');
+  tList.innerHTML = (it.tips || []).map(t => `
+    <div class="tip-item">💡 ${t}</div>
+  `).join('') || '<p style="color:var(--text-secondary);">אין טיפים מוגדרים</p>';
+
+  // Install Tab
+  document.getElementById('mInst').textContent = it.inst || 'סקיל מובנה / כלי מערכת פעיל ישירות.';
+  const relList = document.getElementById('mRel');
+  relList.innerHTML = (it.rel || []).map(rId => {
+    const rIt = DATA.items.find(x => x.id === rId);
+    const rName = rIt ? `${rIt.e} ${rIt.n}` : rId;
+    return `<button class="control-btn" style="padding:5px 12px;font-size:0.82rem;" onclick="openItemModalById('${rId}')">${rName}</button>`;
+  }).join('') || '<span style="color:var(--text-secondary);">אין כלים קשורים</span>';
+
+  // Default to overview tab
+  switchModalTab('tabOverview');
+
+  document.getElementById('itemModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeItemModal(){
+  document.getElementById('itemModal').classList.remove('active');
+  document.body.style.overflow = '';
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  try {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  } catch(e){}
+  sfxClick();
+}
+
+function handleModalOverlayClick(e){
+  if(e.target.id === 'itemModal') closeItemModal();
+}
+
+function handleCompareOverlayClick(e){
+  if(e.target.id === 'compareModal') closeCompareModal();
+}
+
+function switchModalTab(tabId){
+  document.querySelectorAll('.modal-nav .modal-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.modal-body-section').forEach(sec => sec.classList.remove('active'));
+  
+  if(window.event && window.event.target && window.event.target.classList && window.event.target.classList.contains('modal-tab-btn')) {
+    window.event.target.classList.add('active');
+  } else {
+    // Select matching button
+    const btns = document.querySelectorAll('.modal-nav .modal-tab-btn');
+    if(tabId === 'tabOverview' && btns[0]) btns[0].classList.add('active');
+    else if(tabId === 'tabPrompts' && btns[1]) btns[1].classList.add('active');
+    else if(tabId === 'tabSteps' && btns[2]) btns[2].classList.add('active');
+    else if(tabId === 'tabTips' && btns[3]) btns[3].classList.add('active');
+    else if(tabId === 'tabInstall' && btns[4]) btns[4].classList.add('active');
+  }
+  const targetSection = document.getElementById(tabId);
+  if(targetSection) targetSection.classList.add('active');
+  sfxClick();
+}
+
+function copyPromptText(text, btnId){
+  navigator.clipboard.writeText(text);
+  showToast('הפרומפט הועתק בהצלחה! הדבק ב-Antigravity');
+  sfxFav();
+  if(btnId){
+    const btn = document.getElementById(btnId);
+    if(btn){
+      const orig = btn.textContent;
+      btn.textContent = '✓ הועתק!';
+      btn.style.borderColor = 'var(--neon-green)';
+      btn.style.color = 'var(--neon-green)';
+      setTimeout(()=>{
+        btn.textContent = orig;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 1800);
+    }
+  }
+}
+
+function copyCurrentToolPrompt(){
+  if(!currentModalItem) return;
+  const prompt = (currentModalItem.prompts && currentModalItem.prompts[0]) || `${currentModalItem.n}: ${currentModalItem.simple}`;
+  copyPromptText(prompt, 'mBtnCopyMain');
+}
+
+function copyToolDirectLink(){
+  if(!currentModalItem) return;
+  const link = `${BASE_SHARE_URL}#tool-${currentModalItem.id}`;
+  navigator.clipboard.writeText(link);
+  showToast('קישור ישיר לכלי זה הועתק ללוח!');
+  sfxFav();
+  const btn = document.getElementById('mBtnCopyLink');
+  if(btn){
+    const orig = btn.textContent;
+    btn.textContent = '✓ הקישור הועתק!';
+    setTimeout(()=>btn.textContent = orig, 1800);
+  }
+}
+
+function shareCurrentOnWhatsApp(){
+  if(!currentModalItem) return;
+  const link = `${BASE_SHARE_URL}#tool-${currentModalItem.id}`;
+  const text = `היי! מצאתי ב-Antigravity Explorer כלי מדהים: *${currentModalItem.n}* (${currentModalItem.en})\n\n💡 *מה זה עושה:* ${currentModalItem.simple}\n\n💬 *דוגמה לשימוש:*\n"${(currentModalItem.prompts && currentModalItem.prompts[0]) || currentModalItem.desc}"\n\n🔗 *לפתיחת הכלי:* ${link}\n\n✨ מתוך מדריך Antigravity Explorer v3.0 (בהכוונת נתן ליאני)`;
+  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+function speakCurrentTool(){
+  if(!currentModalItem || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const text = `${currentModalItem.n}. ${currentModalItem.simple}. מתי כדאי להשתמש? ${(currentModalItem.when || []).join(', ')}`;
+  const ut = new SpeechSynthesisUtterance(text);
+  ut.lang = 'he-IL';
+  window.speechSynthesis.speak(ut);
+  showToast('מקריא כעת בעברית...');
+}
+
+// FAVORITES
+function toggleFav(id){
+  const idx = favs.indexOf(id);
+  if(idx > -1){
+    favs.splice(idx, 1);
+    showToast('הוסר מהמועדפים');
+  } else {
+    favs.push(id);
+    showToast('נוסף למועדפים ⭐');
+    sfxFav();
+  }
+  localStorage.setItem('agy_favs_v3', JSON.stringify(favs));
+  renderCategoryTabs();
+  renderCards();
+}
+
+// COMPARE SYSTEM
+function toggleCompareFromCard(id){
+  if(compareList.includes(id)){
+    removeFromCompare(id);
+  } else {
+    addToCompare(id);
+  }
+}
+
+function addToCompare(id){
+  if(compareList.includes(id)) return;
+  if(compareList.length >= 3){
+    showToast('ניתן להשוות עד 3 כלים במקביל');
+    return;
+  }
+  compareList.push(id);
+  updateCompareBar();
+  renderCards();
+  sfxFav();
+}
+
+function removeFromCompare(id){
+  compareList = compareList.filter(x => x !== id);
+  updateCompareBar();
+  renderCards();
+}
+
+function clearCompare(){
+  compareList = [];
+  updateCompareBar();
+  renderCards();
+  sfxClick();
+}
+
+function updateCompareBar(){
+  const bar = document.getElementById('compareBar');
+  const preview = document.getElementById('cmpPreview');
+  if(!compareList.length){
+    bar.classList.remove('active');
+    return;
+  }
+  bar.classList.add('active');
+  preview.innerHTML = compareList.map(id => {
+    const it = DATA.items.find(x => x.id === id);
+    return `<span class="compare-badge">${it ? it.e + ' ' + it.n : id} <span style="cursor:pointer;margin-right:4px;" onclick="removeFromCompare('${id}')">✕</span></span>`;
+  }).join('');
+}
+
+function openCompareModal(){
+  const wrap = document.getElementById('compareTableWrap');
+  const items = compareList.map(id => DATA.items.find(x => x.id === id)).filter(Boolean);
+  if(!items.length){
+    showToast('בחר לפחות כלי אחד להשוואה');
+    return;
+  }
+
+  wrap.innerHTML = `
+    <table style="width:100%;border-collapse:collapse;color:var(--text-primary);text-align:right;min-width:500px;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--neon-cyan);">
+          <th style="padding:10px 12px;background:rgba(0,240,255,0.06);">מאפיין</th>
+          ${items.map(it => `<th style="padding:10px 12px;color:var(--neon-cyan);font-size:1.05rem;">${it.e} ${it.n}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px 12px;font-weight:700;color:var(--neon-gold);white-space:nowrap;">🎯 במילים פשוטות</td>
+          ${items.map(it => `<td style="padding:10px 12px;line-height:1.5;">${it.simple}</td>`).join('')}
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px 12px;font-weight:700;color:var(--neon-cyan);white-space:nowrap;">⚡ מזהה טכני</td>
+          ${items.map(it => `<td style="padding:10px 12px;font-family:var(--font-mono);font-size:0.82rem;direction:ltr;text-align:right;">${it.en}</td>`).join('')}
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px 12px;font-weight:700;color:var(--neon-green);white-space:nowrap;">💪 יכולות מרכזיות</td>
+          ${items.map(it => `<td style="padding:10px 12px;font-size:0.88rem;">${(it.caps || []).slice(0,5).join(', ')}</td>`).join('')}
+        </tr>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+          <td style="padding:10px 12px;font-weight:700;color:var(--neon-purple);white-space:nowrap;">💬 דוגמת פרומפט</td>
+          ${items.map(it => `<td style="padding:10px 12px;font-size:0.85rem;line-height:1.4;">${(it.prompts && it.prompts[0]) || ''}</td>`).join('')}
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;font-weight:700;color:var(--neon-blue);white-space:nowrap;">📦 פעולה</td>
+          ${items.map(it => `<td style="padding:10px 12px;"><button class="control-btn active" style="font-size:0.78rem;padding:5px 10px;" onclick="closeCompareModal();openItemModalById('${it.id}')">פתח כרטיס מלא</button></td>`).join('')}
+        </tr>
+      </tbody>
+    </table>
+  `;
+
+  document.getElementById('compareModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  sfxOpen();
+}
+
+function closeCompareModal(){
+  document.getElementById('compareModal').classList.remove('active');
+  document.body.style.overflow = '';
+  sfxClick();
+}
+
+// RELATIONSHIP GRAPH (Multi-ring Force canvas)
+function renderRelationshipGraph(){
+  const cvs = document.getElementById('mapCanvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  cvs.width = cvs.clientWidth * dpr;
+  cvs.height = cvs.clientHeight * dpr;
+  const W = cvs.width;
+  const H = cvs.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const nodes = DATA.items.slice(0, 55);
+  const nodeMap = {};
+  const R = Math.min(W, H) * 0.38;
+
+  nodes.forEach((it, idx) => {
+    const angle = (idx / nodes.length) * 2 * Math.PI;
+    const dist = (idx % 2 === 0) ? R : R * 0.68;
+    nodeMap[it.id] = {
+      x: W/2 + dist * Math.cos(angle),
+      y: H/2 + dist * Math.sin(angle),
+      item: it
+    };
+  });
+
+  // Draw lines
+  ctx.lineWidth = 1.2 * dpr;
+  DATA.connections.forEach(([sid, tid]) => {
+    if(nodeMap[sid] && nodeMap[tid]){
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.16)';
+      ctx.moveTo(nodeMap[sid].x, nodeMap[sid].y);
+      ctx.lineTo(nodeMap[tid].x, nodeMap[tid].y);
+      ctx.stroke();
+    }
+  });
+
+  // Draw nodes
+  Object.values(nodeMap).forEach(n => {
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, 5 * dpr, 0, 2*Math.PI);
+    ctx.fillStyle = '#00f0ff';
+    ctx.shadowBlur = 6 * dpr;
+    ctx.shadowColor = '#00f0ff';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#f1f5f9';
+    ctx.font = `${Math.max(9, 10 * dpr)}px Assistant, sans-serif`;
+    ctx.fillText(n.item.n.substring(0, 10), n.x + 8 * dpr, n.y + 3 * dpr);
+  });
+}
+
+// BACKGROUND PARTICLES CANVAS
+function initBgCanvas(){
+  const cvs = document.getElementById('bgCanvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  let W = cvs.width = window.innerWidth;
+  let H = cvs.height = window.innerHeight;
+
+  window.addEventListener('resize', ()=>{
+    W = cvs.width = window.innerWidth;
+    H = cvs.height = window.innerHeight;
+  }, {passive:true});
+
+  const particles = [];
+  const P_COUNT = Math.min(40, Math.floor(window.innerWidth / 30));
+  for(let i=0; i<P_COUNT; i++){
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 2 + 1,
+      color: Math.random() > 0.5 ? 'rgba(0,240,255,' : 'rgba(255,0,234,'
+    });
+  }
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0; i<P_COUNT; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0) p.x = W;
+      if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H;
+      if(p.y > H) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, 2*Math.PI);
+      ctx.fillStyle = p.color + '0.45)';
+      ctx.fill();
+
+      for(let j=i+1; j<P_COUNT; j++){
+        const p2 = particles[j];
+        const dx = p.x - p2.x;
+        const dy = p.y - p2.y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d < 110){
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(0,240,255,${0.12 * (1 - d/110)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+// CHECK URL HASH FOR DIRECT LINK ON LOAD
+function checkInitialHash(){
+  const hash = window.location.hash;
+  if(hash && hash.startsWith('#tool-')){
+    const toolId = hash.replace('#tool-', '');
+    const it = DATA.items.find(i => i.id === toolId || i.en === toolId);
+    if(it){
+      setTimeout(()=>openItemModal(it), 200);
+    }
+  }
+}
+
+// INIT
+window.addEventListener('DOMContentLoaded', ()=>{
+  initBgCanvas();
+  renderStats();
+  renderOnboarding();
+  renderWizard();
+  renderRecipes();
+  renderCategoryTabs();
+  renderCards();
+  checkInitialHash();
+});
+</script>
+
+</body>
+</html>
